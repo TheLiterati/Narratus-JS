@@ -12,10 +12,10 @@
     "build": "npm run lint && npm run test",
     "cover": "istanbul cover _mocha",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
-    "debug": "DEBUG=cfgram* nodemon server.js",
+    "debug": "DEBUG=narratus* nodemon server.js",
     "lint": "eslint **/*.js",
     "test": "mocha",
-    "test-debug": "DEBUG=cfgram* mocha",
+    "test-debug": "DEBUG=narratus* mocha",
     "start": "node server.js",
     "watch": "nodemon server.js"
   },

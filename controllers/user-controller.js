@@ -3,7 +3,8 @@
 const debug = require('debug')('narratus:user-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
-const User = require('../models/user');
+const User = require('../models/user.js');
+const Story = require('../models/story.js');
 
 module.exports = exports = {};
 
@@ -18,7 +19,7 @@ exports.createAccount = function(user, password) {
   .then(user => user.save())
   .then(user => user.generateToken())
   .then(token => token)
-  .catch(err => Promise.reject(createError(400, 'Bad request')));
+  .catch(() => Promise.reject(createError(400, 'Bad request')));
 };
 
 exports.fetchAccount = function(checkUser) {
@@ -27,5 +28,22 @@ exports.fetchAccount = function(checkUser) {
   .then(user => user.comparePasswordHash(checkUser.password))
   .then(user => user.generateToken())
   .then(token => token)
-  .catch(err => Promise.reject(createError(401, 'Not authorized')));
+  .catch(() => Promise.reject(createError(401, 'Not authorized')));
+  
 };
+
+exports.addToFollowed = function(userId, storyId) {
+  debug('#addToFollowed');
+  
+  if(!userId) return Promise.reject(createError(400, 'Story ID required'));
+  if(!storyId) return Promise.reject(createError(400, 'Story ID required'));
+  
+  return User.findOne(userId)
+  .then(user => {
+    return Story.findOne(storyId)
+    .then(() => user.followedStories.push(storyId))
+    .catch(() => Promise.reject(createError(400, 'Bad request')));
+  });
+};
+
+exports.fetchDashboard = function() {};

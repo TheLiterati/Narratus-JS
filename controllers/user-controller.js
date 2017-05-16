@@ -1,26 +1,31 @@
 'use strict';
 
-const debug = require('morgan');
-const createError = require('http-errors');
+const debug = require('debug')('narratus:user-controller');
 const Promise = require('bluebird');
-const mongoose = require('mongoose');
+const createError = require('http-errors');
 const User = require('../models/user');
-mongoose.Promise = Promise;
 
 module.exports = exports = {};
 
-exports.createUser = function(user, req) {
-  debug('#createUser');
-  if(!user) return Promise.reject(createError(400, 'No user, user required.'));
-
-  let tempPassword = req.body.password;
-  req.body.password = null;
-  delete req.body.password;
+exports.createAccount = function(user, password) {
+  debug('#createAccount');
+  if(!user.username) return Promise.reject(createError(400, 'username required'));
+  if(!password) return Promise.reject(createError(400, 'password required'));
+  if(!user.email) return Promise.reject(createError(400, 'email required'));
 
   let newUser = new User(user);
-  return newUser.generatePasswordHash(tempPassword)
+  return newUser.generatePasswordHash(password)
   .then(user => user.save())
   .then(user => user.generateToken())
-  .then(token => Promise.resolve(token))
-  .catch(err => Promise.reject(err.status).send(err));
+  .then(token => token)
+  .catch(err => Promise.reject(createError(400, 'Bad request')));
+};
+
+exports.fetchAccount = function(checkUser) {
+  debug('#fetchAccount');
+  return User.findOne({username: checkUser.username})
+  .then(user => user.comparePasswordHash(checkUser.password))
+  .then(user => user.generateToken())
+  .then(token => token)
+  .catch(err => Promise.reject(createError(401, 'Not authorized')));
 };

@@ -1,48 +1,29 @@
 'use strict';
 
-const debug = require('debug')('narratus:auth-routes');
+const debug = require('debug')('narratus:user-routes');
 const basicAuth = require('../lib/basic-auth-middleware');
-const User = require('../models/user');
-const userController = require('../controllers/user-controller');
-
-// Create user: email, username, password.
-//POST /api/signup
+const authController = require('../controllers/user-controller');
 
 module.exports = function(router) {
+
   router.post('/signup', (req, res) => {
-    debug('POST /signup');
+    debug('#POST /signup');
 
-    return userController.createUser(req.body)
-    .then(token => {
-      console.log('token', token);
-      res.json(token);
-    })
-    .catch(err => res.status(err.status).send(err));
+    let tempPassword = req.body.password;
+    req.body.password = null;
+    delete req.body.password;
+
+    authController.createAccount(req.body, tempPassword)
+    .then(token => res.json(token))
+    .catch(err => res.status(err.status).send(err.mesage));
   });
-
-  // User login: username, password.
-  //GET /api/signin
 
   router.get('/signin', basicAuth, (req, res) => {
     debug('GET /signin');
 
-    return User.findOne({username: req.auth.username})
-    .then(user => user.comparePasswordHash(req.auth.password))
-    .then(user => user.generateToken())
+    authController.fetchAccount(req.auth)
     .then(token => res.json(token))
-    .catch(err => res.status(err.status).send(err));
+    .catch(err => res.status(err.status).send(err.message));
   });
-
-  // router.get('/dashboard', (req, res) => {
-  //   debug('GET /dashboard');
-  //
-  //   return User.find({username: req.followedStories});
-  // });
   return router;
 };
-
-//GET /api/dashboard
-// fetch all of the user's followed and owned stories.
-
-//PUT /api/follow/:storyId
-// follow a story that you are not contributing to.

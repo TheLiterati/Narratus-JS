@@ -9,16 +9,13 @@ mongoose.Promise = Promise;
 
 module.exports = exports = {};
 
-exports.createUser = function(user, req) {
+exports.createUser = function(user, password) {
   debug('#createUser');
   if(!user) return Promise.reject(createError(400, 'No user, user required.'));
 
-  let tempPassword = req.body.password;
-  req.body.password = null;
-  delete req.body.password;
-
   let newUser = new User(user);
-  return newUser.generatePasswordHash(tempPassword)
+
+  return newUser.generatePasswordHash(password)
   .then(user => user.save())
   .then(user => user.generateToken())
   .then(token => Promise.resolve(token))

@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/user-routes');
 const storyRoutes = require('./routes/story-routes');
-const snippetRoutes = require('./routes/snippet-routes');
+//const snippetRoutes = require('./routes/snippet-routes');
 
 
 const app = express();
@@ -28,7 +28,7 @@ app.use(bodyParser);
 
 app.use('/api', userRoutes(router));
 app.use('/api', storyRoutes(router));
-app.use('/api', snippetRoutes(router));
+// app.use('/api', snippetRoutes(router));
 
 app.listen(port, function(){
   console.log('Listening on port', port);

@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('narratus:auth-routes');
+const debug = require('debug')('narratus:user-routes');
 const basicAuth = require('../lib/basic-auth-middleware');
 const User = require('../models/user');
 const userController = require('../controllers/user-controller');
@@ -12,7 +12,11 @@ module.exports = function(router) {
   router.post('/signup', (req, res) => {
     debug('POST /signup');
 
-    return userController.createUser(req.body)
+    let tempPassword = req.body.password;
+    req.body.password = null;
+    delete req.body.password;
+
+    return userController.createUser(req.body, tempPassword)
     .then(token => {
       console.log('token', token);
       res.json(token);

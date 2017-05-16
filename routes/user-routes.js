@@ -26,14 +26,6 @@ module.exports = function(router) {
     .catch(err => res.status(err.status).send(err.message));
   });
   
-  router.get('/dashboard', basicAuth, (req, res) => {
-    debug('GET /dashboard');
-    
-    authController.fetchDashboard()
-    .then()
-    .catch();
-  });
-  
   router.put('/follow/:userId/story/:storyId', basicAuth, (req, res) => {
     debug('PUT /follow/:storyId');
     

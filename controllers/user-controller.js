@@ -46,4 +46,3 @@ exports.addToFollowed = function(userId, storyId) {
   });
 };
 
-exports.fetchDashboard = function() {};

@@ -51,10 +51,7 @@ exports.deleteStory = function(storyId) {
 
   console.log(storyId);
 
-  return Story.findByIdAndRemove(storyId);
-  // .then(story => {
-    // console.log('Deleted:\n', story);
-    // Promise.resolve(story);
-  // })
-  // .catch(err => Promise.reject(createError(404, 'Story  not found')));
+  return Story.findByIdAndRemove(storyId)
+  .then(story => Promise.resolve(story))
+  .catch(err => Promise.reject(createError(404, 'Story  not found')));
 };

@@ -1,8 +1,8 @@
 'use strict';
 
 const debug = require('debug')('narratus:story-routes');
-const storyController = require('../controllers/story-controller.js');
-const bearerAuth = require('../lib/bearer-auth-middleware.js');
+const storyController = require('../controllers/story-controller');
+const bearerAuth = require('../lib/bearer-auth-middleware');
 
 module.exports = function(router) {
   router.post('/story', bearerAuth, (req, res) => {

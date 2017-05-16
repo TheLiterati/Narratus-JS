@@ -3,7 +3,7 @@
 const debug = require('debug')('narratus:story-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
-const Story = require('../models/story.js');
+const Story = require('../models/story');
 
 module.exports = exports = {};
 

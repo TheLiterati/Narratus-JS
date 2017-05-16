@@ -16,7 +16,7 @@ const storyRoutes = require('./routes/story-routes');
 
 const app = express();
 const router = express.Router();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/narratus-dev';
 
 mongoose.Promise = Promise;
@@ -30,6 +30,6 @@ app.use('/api', userRoutes(router));
 app.use('/api', storyRoutes(router));
 // app.use('/api', snippetRoutes(router));
 
-app.listen(port, function(){
-  console.log('Listening on port', port);
+app.listen(PORT, function(){
+  console.log('Listening on port', PORT);
 });

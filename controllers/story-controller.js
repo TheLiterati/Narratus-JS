@@ -3,25 +3,22 @@
 const debug = require('debug')('narratus:story-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
-const Story = require('../models/story');
+const Story = require('../models/story.js');
 
 module.exports = exports = {};
 
-exports.createStory = function(req) {
+exports.createStory = function(story) {
   debug('#createStory');
-  if(!req.body.title) return Promise.reject(createError(400, 'Invalid title'));
-  if(!req.body.description) return Promise.reject(createError(400, 'Invalid description'));
-  if(!req.body.startSnippet) return Promise.reject(createError(400, 'Invalid start snippet'));
-  req.body.userId = req.user._id;
+  if(!story) return Promise.reject(createError(400, 'No story included.'));
 
-  return new Story(req.body).save()
+  return new Story(story).save()
   .then(story => story)
-  .catch(err => Promise.reject(createError(400, err.message)));
+  .catch(() => Promise.reject(createError(400, 'You done goofed up the submission')));
 };
 
-exports.fetchAll = function(req) {
+exports.fetchStories = function() {
   debug('#fetchAll');
-  console.log(req);
+  // console.log();
   return Story.find()
   .then(story => {
     return Promise.resolve(story);
@@ -32,7 +29,7 @@ exports.fetchAll = function(req) {
 exports.fetchStory = function(id) {
   debug('#fetchStory');
 
-  return Story.findById(id)
+  return Story.findOne(id)
   .then(story => {
     return Promise.resolve(story);
   })
@@ -49,10 +46,15 @@ exports.updateStory = function(req) {  //NOTE: stretch
   .catch(() => Promise.reject(createError(404, 'Story not found')));
 };
 
-exports.deleteStory = function(id) {
+exports.deleteStory = function(storyId) {
   debug('#deleteStory');
 
-  return Story.findByIdAndRemove(id)
-  .then(story => Promise.resolve(story))
-  .catch(() => Promise.reject(createError(404, 'Story  not found')));
+  console.log(storyId);
+
+  return Story.findByIdAndRemove(storyId);
+  // .then(story => {
+    // console.log('Deleted:\n', story);
+    // Promise.resolve(story);
+  // })
+  // .catch(err => Promise.reject(createError(404, 'Story  not found')));
 };

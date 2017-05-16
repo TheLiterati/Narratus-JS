@@ -9,29 +9,16 @@ module.exports = exports = {};
 
 exports.createStory = function(story) {
   debug('#createStory');
-  // if(!req.body.title) return Promise.reject(createError(400, 'Invalid title'));
-  // if(!req.body.description) return Promise.reject(createError(400, 'Invalid description'));
-  // if(!req.body.startSnippet) return Promise.reject(createError(400, 'Invalid start snippet'));
-
-  // const newStory = new Story(story);
-  // console.log(newStory);
-  // // newStory.save()
-  // return newStory.save()
-  // .then(story => {
-  //   console.log('Resolution', story);
-  //   Promise.resolve(story);
-  // })
-  // .catch(err => Promise.reject(createError(400, err.message)));
+  if(!story) return Promise.reject(createError(400, 'No story included.'));
 
   return new Story(story).save()
-  .then(newStory => console.log('This is a story', newStory))
   .then(story => story)
-  .catch(() => createError(400, 'You fucked up'));
+  .catch(() => Promise.reject(createError(400, 'You done goofed up the submission')));
 };
 
-exports.fetchAll = function(req) {
+exports.fetchStories = function() {
   debug('#fetchAll');
-  console.log(req);
+  // console.log();
   return Story.find()
   .then(story => {
     return Promise.resolve(story);
@@ -42,7 +29,7 @@ exports.fetchAll = function(req) {
 exports.fetchStory = function(id) {
   debug('#fetchStory');
 
-  return Story.findById(id)
+  return Story.findOne(id)
   .then(story => {
     return Promise.resolve(story);
   })

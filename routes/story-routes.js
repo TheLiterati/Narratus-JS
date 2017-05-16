@@ -1,30 +1,26 @@
 'use strict';
 
 const debug = require('debug')('narratus:story-routes');
-// const bodyParser = require('body-parser').json();
-const storyController = require('../controllers/story-controller.js');
 const bearerAuth = require('../lib/bearer-auth-middleware');
+const createError = require('http-errors');
+const storyController = require('../controllers/story-controller.js');
 
 module.exports = function(router) {
   router.post('/story', bearerAuth, (req, res) => {
     debug('#POST /api/story');
 
     req.body.userId = req.user._id;
-    
-    console.log('string req.user._id', req.user._id);
-    console.log('string this req.userId', req.body.userId);
-
-    console.log('give it a string', req.body);
-    console.log('some sort of string in there, too', req.body.userId);
-
     return storyController.createStory(req.body)
-    .then(story => res.json(story))
-    .catch(err => res.status(err.status).send(err.message));
+    .then(story => {
+      console.log(req.body);
+      res.json(story);
+    })
+    .catch(() => res.send(createError(400, 'fuck')));
   });
 
-  router.get('/story', bearerAuth, (req, res) => {
+  router.get('/story/', bearerAuth, (req, res) => {
     debug('#GET /api/story');
-    storyController.fetchAll(req)
+    storyController.fetchStories(req)
     .then(story => res.json(story))
     .catch(err => res.status(err.status).send(err.message));
   });

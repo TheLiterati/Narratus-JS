@@ -45,7 +45,7 @@ exports.updateStory = function(req) {  //NOTE: stretch
   if(!req.body.title || !req.body.description || !req.body.startSnippet) return Promise.reject(createError(400, 'Title, description, and starting snippet are required'));
   
   return Story.findByIdAndUpdate(req.params.id, req.body, {new: true})
-  .then(story => return Promise.resolve(story))
+  .then(story => Promise.resolve(story))
   .catch(() => Promise.reject(createError(404, 'Story not found')));
 };
 

@@ -33,16 +33,19 @@ module.exports = function(router) {
   });
 
   router.put('/story/:storyId', bearerAuth, (req, res) => {  //NOTE: stretch
-    debug('#PUT /story/:storyId');
+    debug('#PUT /api/story/:storyId');
     storyController.updateStory(req)
     .then(story => res.json(story))
     .catch(err => res.status(err.status).send(err.message));
   });
 
   router.delete('/story/:storyId', bearerAuth, (req, res) => {
-    debug('#DELETE /story/:storyId');
-    storyController.deleteStory(req.params.id)
-    .then(err => res.status(204).send(err.message))
+    debug('#DELETE /api/story/:storyId');
+    storyController.deleteStory(req.params.storyId, req.user._id)
+    .then(story => {
+      console.log('Deleted:\n', story);
+      Promise.resolve(story);
+    })
     .catch(err => res.status(err.status).send(err.message));
   });
 

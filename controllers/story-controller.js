@@ -46,10 +46,15 @@ exports.updateStory = function(req) {  //NOTE: stretch
   .catch(() => Promise.reject(createError(404, 'Story not found')));
 };
 
-exports.deleteStory = function(id) {
+exports.deleteStory = function(storyId) {
   debug('#deleteStory');
 
-  return Story.findByIdAndRemove(id)
-  .then(story => Promise.resolve(story))
-  .catch(() => Promise.reject(createError(404, 'Story  not found')));
+  console.log(storyId);
+
+  return Story.findByIdAndRemove(storyId);
+  // .then(story => {
+    // console.log('Deleted:\n', story);
+    // Promise.resolve(story);
+  // })
+  // .catch(err => Promise.reject(createError(404, 'Story  not found')));
 };

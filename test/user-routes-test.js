@@ -18,7 +18,6 @@ const testUser = {
   email: 'christina@narratus.io',
 };
 
-//
 describe.only('User routes', function() {
 
   describe('POST: /api/signup', function(){
@@ -63,25 +62,26 @@ describe.only('User routes', function() {
   });
 
   describe('GET: /api/signin', function(){
+    before(done => {
+      let user = new User(testUser);
+      user.generatePasswordHash(testUser.password)
+      .then(user => user.save())
+      .then(user => {
+        this.temporaryUser = user;
+        done();
+      })
+      .catch();
+    });
+    after(done => {
+      User.remove({})
+      .then(() => done())
+      .catch(done);
+    });
+
     describe('user logged in with correct credentials', function() {
-      before(done => {
-        let user = new User(testUser);
-        user.generatePasswordHash(testUser.password)
-        .then(user => user.save())
-        .then(user => {
-          this.temporaryUser = user;
-          done();
-        })
-        .catch();
-      });
-      after(done => {
-        User.remove({})
-        .then(done())
-        .catch();
-      });
       it('should respond with 200 ok status and token', done => {
         request.get(`${url}/api/signin`)
-        .send(testUser)
+        .auth('christina', 'thebestpasswordever')
         .end((err, res) => {
           expect(res.status).to.equal(200);
           expect(res.body).to.be.a('string');
@@ -91,11 +91,10 @@ describe.only('User routes', function() {
     });
     describe('user entered incorrect login information', function(){
       it('should repond with a 401 unauthorized error', done => {
-        request.post(`${url}/api/signin`)
-        .send(testUser)
+        request.get(`${url}/api/signin`)
+        .auth('wronguser', 'wrongpassword')
         .end((err, res) => {
           expect(res.status).to.equal(401);
-          expect(res.body).to.be.a('string');
           done();
         });
       });

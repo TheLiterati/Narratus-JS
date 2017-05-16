@@ -4,19 +4,17 @@
   "description": "Narratus will allow crowd written stories to be easily shared across the world",
   "main": "server.js",
   "directories": {
-    "test": "tests"
+    "test": "test"
   },
   "scripts": {
-    "test": "test",
+    "test": "mocha",
     "start": "node server.js",
     "build": "npm run lint && npm run test",
     "cover": "istanbul cover _mocha",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "debug": "DEBUG=narratus* nodemon server.js",
     "lint": "eslint **/*.js",
-    "test": "mocha",
     "test-debug": "DEBUG=narratus* mocha",
-    "start": "node server.js",
     "watch": "nodemon server.js"
   },
   "repository": {
@@ -50,6 +48,7 @@
     "http-errors": "^1.6.1",
     "jsonwebtoken": "^7.4.0",
     "mongoose": "^4.9.9",
-    "morgan": "^1.8.1"
+    "morgan": "^1.8.1",
+    "superagent": "^3.5.2"
   }
 }

@@ -10,7 +10,7 @@ module.exports = function(router) {
     debug('#POST /api/story');
 
     req.body.userId = req.user._id;
-    return storyController.createStory(req.body)
+    return storyController.createStory(req.params.userId, req.body)
     .then(story => {
       console.log(req.body);
       res.json(story);

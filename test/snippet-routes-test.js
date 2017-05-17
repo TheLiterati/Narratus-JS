@@ -100,19 +100,19 @@ describe('Snippet Routes', function () {
     //     });
     //   });
     // });
-    //
-    // describe('a request with an invalid story ID', () => {
-    //   it('should respond with a 404 error not found', done => {
-    //     request.post(`${url}/api/snippet/story12345`)
-    //     .set({Authorization: `Bearer ${this.tempToken}`})
-    //     .send(exampleSnippet)
-    //     .end((err, res) => {
-    //       expect(res.status).to.equal(404);
-    //       done();
-    //     });
-    //   });
-    // });
-    //
+
+    describe('a request with an invalid story ID', () => {
+      it('should respond with a 404 error not found', done => {
+        request.post(`${url}/api/snippet/story12345`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleSnippet)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
     // describe('a bad request with an invalid body', () => {
     //   it('should respond with a 400 invalid body error', done => {
     //     request.post(`${url}/api/snippet/${this.tempStory._id}`)
@@ -124,6 +124,5 @@ describe('Snippet Routes', function () {
     //     });
     //   });
     // });
-
   });
 });

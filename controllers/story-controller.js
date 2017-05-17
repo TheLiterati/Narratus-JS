@@ -4,16 +4,33 @@ const debug = require('debug')('narratus:story-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
 const Story = require('../models/story.js');
+const User = require('../models/user.js');
 
 module.exports = exports = {};
 
-exports.createStory = function(story) {
-  debug('#createStory');
-  if(!story) return Promise.reject(createError(400, 'No story included.'));
+// exports.createStory = function(story) {
+//   debug('#createStory');
+//   if(!story) return Promise.reject(createError(400, 'No story included.'));
+//
+//   return new Story(story).save()
+//   .then(story => story)
+//   .catch(() => Promise.reject(createError(400, 'You done goofed up the submission')));
+// };
 
-  return new Story(story).save()
-  .then(story => story)
-  .catch(() => Promise.reject(createError(400, 'You done goofed up the submission')));
+exports.createStory = function(userId, story){
+  debug('#createStory');
+
+  return User.findOne(userId)
+  .then(user => {
+    return new Story(story).save()
+    .then(newStory => {
+      user.ownedStories.push(newStory);
+      user.save();
+      return newStory;
+    })
+    .then(newStory => Promise.resolve(newStory))
+    .catch(err => Promise.reject(createError(400, err.message)));
+  });
 };
 
 exports.fetchStories = function() {
@@ -29,7 +46,7 @@ exports.fetchStories = function() {
 exports.fetchStory = function(id) {
   debug('#fetchStory');
 
-  return Story.findOne(id)
+  return Story.findOne(id).populate('snippets')
   .then(story => {
     return Promise.resolve(story);
   })

@@ -35,7 +35,7 @@ exports.fetchAccount = function(checkUser) {
 exports.populateOwnedStories = function(userId){
   debug('#populateOwnedStories');
 
-  return User.findOne(userId).populate('ownedStories')
+  return User.findById(userId).populate('ownedStories')
   .then(user => user)
   .catch(err => Promise.reject(createError(404, err.message)));
 };
@@ -43,7 +43,7 @@ exports.populateOwnedStories = function(userId){
 exports.populateFollowedStories = function(userId){
   debug('#populateFollowedStories');
 
-  return User.findOne(userId).populate('followedStories')
+  return User.findById(userId).populate('followedStories')
   .then(user => user)
   .catch(err => Promise.reject(createError(404, err.message)));
 };

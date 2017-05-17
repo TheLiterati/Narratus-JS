@@ -30,9 +30,9 @@ module.exports = function(router) {
   router.get('/dashboard/:userId', bearerAuth, (req, res) => {
     debug('#GET /dashboard');
 
-    req.body.userId = req.user._id;
+    // req.body.userId = req.user._id;
 
-    return userController.populateOwnedStories(req.body.userId)
+    return userController.populateOwnedStories(req.params.userId)
     .then(ownedStories => res.json(ownedStories))
     .then(()=> {
       return userController.populateFollowedStories(req.body.userId)

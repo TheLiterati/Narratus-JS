@@ -22,11 +22,21 @@ const testUser = {
   followedStories: [],
 };
 
+const testUser2 = {
+  username: 'michael',
+  password: 'thesecondbestpasswordever',
+  email: 'mp@narratus.io',
+  // ownedStories: ['ownedId1', 'ownedId2'],
+  // 'followedId1', 'followedId2'
+  followedStories: [],
+};
+
 const testStory = {
   title: 'test title',
   description: 'test description',
   startSnippet: 'this is the first snippet of the test story',
 };
+
 
 describe.only('User routes', function() {
 
@@ -113,13 +123,14 @@ describe.only('User routes', function() {
 
   // follow story button
   // should get a 401 unauthorized as well if you go to route.
-  describe('PUT: /api/follow/:userId/story/:storyId', function(){
+  describe.only('PUT: /api/follow/:userId/story/:storyId', function(){
     before(done => {
       new User(testUser)
       .generatePasswordHash(testUser.password)
       .then(user => user.save())
       .then(user => {
         this.tempUser = user;
+        console.log('before temp User', this.tempUser);
         return user.generateToken();
       })
       .then(token => {
@@ -130,15 +141,33 @@ describe.only('User routes', function() {
     });
 
     before(done => {
+      new User(testUser2)
+      .generatePasswordHash(testUser2.password)
+      .then(user => user.save())
+      .then(user => {
+        this.tempUser2 = user;
+        console.log('before temp User2', this.tempUser2);
+        return user.generateToken();
+      })
+      .then(token => {
+        this.tempToken2 = token;
+        done();
+      })
+      .catch(() => done());
+    });
+    
+    before(done => {
+      testStory.userId = this.tempUser2._id.toString();
       new Story(testStory).save()
       .then(story => {
         this.tempStory = story;
+        console.log('before temp Story', this.tempStory);
         done();
       })
       .catch(() => done());
     });
 
-    after(done => {
+    afterEach(done => {
       Promise.all([
         User.remove({}),
         Story.remove({}),
@@ -146,12 +175,18 @@ describe.only('User routes', function() {
       .then(() => done())
       .catch(done);
     });
-
+    console.log('after temp Story', this.tempStory);
+    console.log('after temp User', this.tempUser);
+    console.log('after temp User2', this.tempUser2);
     // should put a story id into the user's array in the database
     it('followed stories should have an array', done => {
       request.put(`${url}/api/follow/${this.tempUser._id}/story/${this.tempStory._id}`)
+      .send(testStory)
+      // .set({Authorization: `Bearer ${this.tempToken}`})
       .end((err, res) => {
+        console.log('test Story', testStory);
         expect(testUser.followedStories).to.be.an('array');
+        console.log('res', res.body);
         expect(res.status).to.equal(200);
         done();
       });

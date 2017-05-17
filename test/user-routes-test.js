@@ -37,7 +37,6 @@ const testStory = {
   startSnippet: 'this is the first snippet of the test story',
 };
 
-
 describe('User routes', function() {
 
   describe('POST: /api/signup', function(){

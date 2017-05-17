@@ -25,5 +25,14 @@ module.exports = function(router) {
     .then(token => res.json(token))
     .catch(err => res.status(err.status).send(err.message));
   });
+  
+  router.put('/follow/:userId/story/:storyId', basicAuth, (req, res) => {
+    debug('PUT /follow/:storyId');
+    
+    authController.addToFollowed(req.params.userId, req.params.storyId)
+    .then(story => res.json(story))
+    .catch(err => res.status(err.status).send(err.message));
+  });
+  
   return router;
 };

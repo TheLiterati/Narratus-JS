@@ -12,14 +12,7 @@ module.exports = exports = {};
 exports.createSnippet = function(storyId, snippet){
   debug('#createSnippet');
   console.log('Snippet Body: \n', snippet);
-
-  // return storyController.fetchStory(storyId)
   return Story.findById(storyId)
-  // .then(story => {
-  //   console.log('The Story we\'re targeting: \n', story);
-  //   console.log('Our Story\'s Snippets: \n', story.snippets);
-  //   // return Promise.resolve(story);
-  // })
   .then(story => {
     console.log('StoryId.snippets: \n', story.pendingSnippets);
     return new Snippet(snippet).save()
@@ -34,3 +27,49 @@ exports.createSnippet = function(storyId, snippet){
     .catch(err => Promise.reject(err));
   });
 };
+
+exports.approveSnippet = function(storyId, snippet){
+  debug('#createSnippet');
+  console.log('Snippet Body: \n', snippet);
+
+  return Story.findById(storyId)
+  .then(story => {
+    console.log('StoryId.snippets: \n', story.snippets);
+    return new Snippet(snippet).save()
+    .then(approvedSnippet => {
+      console.log('Pre-pushed snippet: \n', approvedSnippet);
+      story.snippets.push(approvedSnippet);
+      story.pendingSnippets = [];
+      story.save();
+      console.log('Story\'s snippet array: \n', story.snippets);
+      return approvedSnippet;
+    })
+    .then(approvedSnippet => Promise.resolve(approvedSnippet))
+    .catch(err => Promise.reject(err));
+  });
+};
+
+// return new Snippet ={
+//
+// }
+
+  // return Story.findById(storyId)
+  // .then(story => {
+  //   console.log('Whole Story object: \n', story);
+  //   console.log('Whole pendingsnippet array: \n', story.pendingSnippets);
+  //   for (var i = 0; i < snippetArray.length; i++) {
+  //
+  //     if(snippetArray[i].accepted === true){
+  //       story.snippets.push(snippetArray[i]);
+  //       console.log('New array of accepted snippets: \n', story.snippets);
+  //       story.save();
+  //       // story.pendingSnippets = [];
+  //     }
+  //   }
+  //
+  // })
+  // .then(story => {
+  //   console.log('Is dis da story?', story);
+  //   Promise.resolve(story);
+  // })
+  // .catch(err => Promise.reject(err));

@@ -5,13 +5,16 @@ const request = require('superagent');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const User = require('../models/user');
-const Story = require('../models/story');
+// const Story = require('../models/story');
 
 mongoose.Promise = Promise;
 
-require('../server.js');
+// *** SERVER SETUP ***
 
+require('../server');
 const url = `http://localhost:${process.env.PORT}`;
+
+// *** TEST MODEL SETUP ***
 
 const testUser = {
   username: 'christina',
@@ -21,25 +24,77 @@ const testUser = {
   // 'followedId1', 'followedId2'
   followedStories: [],
 };
-
-const testUser2 = {
-  username: 'michael',
-  password: 'thesecondbestpasswordever',
-  email: 'mp@narratus.io',
-  // ownedStories: ['ownedId1', 'ownedId2'],
-  // 'followedId1', 'followedId2'
-  followedStories: [],
-};
-
-const testStory = {
-  title: 'test title',
-  description: 'test description',
-  startSnippet: 'this is the first snippet of the test story',
-};
+// const testUser2 = {
+//   username: 'michael',
+//   password: 'thesecondbestpasswordever',
+//   email: 'mp@narratus.io',
+//   // ownedStories: ['ownedId1', 'ownedId2'],
+//   // 'followedId1', 'followedId2'
+//   followedStories: [],
+// };
+// const testStory = {
+//   title: 'test title',
+//   description: 'test description',
+//   startSnippet: 'this is the first snippet of the test story',
+// };????
 
 describe('User routes', function() {
 
+  // *** USER AUTHENTICATION ***
+
+  // GET: for unauthenticated user: 200, 401, 404
+  describe('GET: /api/signup', function(){
+
+    // 200 (proper request with valid body, returns a token)
+    describe('proper request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+
+    // 401 (unauthorized with invalid username/password)
+    describe('unauthorized TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+
+    // 404 (bad request, not found)
+    describe('bad request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
+    // NOTE: this may or may not be needed here
+    after(done => {
+      User.remove({})
+      .then(done())
+      .catch();
+    });
+  });
+
+  // *** USER TESTS ***
+
+  // POST: for user tests: 200, 400, 401
   describe('POST: /api/signup', function(){
+
+    // 200 (proper request with valid body, returns a token)
     describe('user filled out form data correctly', function(){
       it('should return a token', done => {
         request.post(`${url}/api/signup`)
@@ -51,6 +106,8 @@ describe('User routes', function() {
         });
       });
     });
+
+    // 400 (bad request with invalid body)
     describe('user entered missing or incorrect form data', function(){
       it('should respond with a 400 bad request error', done => {
         request.post(`${url}/api/signup`)
@@ -61,6 +118,21 @@ describe('User routes', function() {
         });
       });
     });
+
+    // 401 (unauthorized with invalid username/password)
+    describe('user submitted invalid username or password', function(){
+      it('should respond with a 401 unauthorized error', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .send('')
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+
+    // NOTE: this may or may not be needed here
     after(done => {
       User.remove({})
       .then(done())
@@ -68,19 +140,9 @@ describe('User routes', function() {
     });
   });
 
-  describe('GET: /api/signin', function() {
-    describe('user put in a bad url path', function() {
-      it('return a bad request 404 not found', done => {
-        request.get(`${url}/api/badrequest`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    });
-  });
-
+  // GET: for user tests: 200, 401, 400
   describe('GET: /api/signin', function(){
+    // Test user setup and teardown
     before(done => {
       let user = new User(testUser);
       user.generatePasswordHash(testUser.password)
@@ -97,6 +159,7 @@ describe('User routes', function() {
       .catch(done);
     });
 
+    // 200 (proper request with valid body, returns a token)
     describe('user logged in with correct credentials', function() {
       it('should respond with 200 ok status and token', done => {
         request.get(`${url}/api/signin`)
@@ -108,6 +171,8 @@ describe('User routes', function() {
         });
       });
     });
+
+    // 401 (unauthorized with invalid username/password)
     describe('user entered incorrect login information', function(){
       it('should repond with a 401 unauthorized error', done => {
         request.get(`${url}/api/signin`)
@@ -120,9 +185,123 @@ describe('User routes', function() {
     });
   });
 
+  // GET: for user tests: 404
+  describe('GET: /api/signin', function() {
+    // 404 (bad request, not found)
+    describe('user put in a bad url path', function() {
+      it('return a bad request 404 not found', done => {
+        request.get(`${url}/api/badrequest`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+  // NOTE: stretch goals below
+
+  // PUT: (stretch)
+
+  // 404 (bad request, not found)
+  // PUT: for user tests: 200, 400, 401, 404
+  describe('PUT: /api/follow/:userId/story/:storyId', function(){
+
+    // 200 (proper request with valid body, returns a body)
+    describe('proper request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+
+    // 400 (bad request with invalid body)
+    describe('bad request invalid TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+
+    // 401 (unauthorized with invalid username/password)
+    describe('unauthorized TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+
+    // 404 (bad request, not found)
+    describe('bad request not out TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+
+    // NOTE: this may or may not be needed here
+    after(done => {
+      User.remove({})
+      .then(done())
+      .catch();
+    });
+  });
+
+  // DELETE: (stretch)
+
+  // 204 (no content)
+  describe('DELETE: /api/tbd', function(){
+
+    // 200 (proper request with valid body, returns a body)
+    describe('proper request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+
+    // NOTE: this may or may not be needed here
+    after(done => {
+      User.remove({})
+      .then(done())
+      .catch();
+    });
+  });
+// End  
+});
+
+
+
+
+
+
+
+
+  // ### PREVIOUS 5/16 ###
+
   // follow story button
   // should get a 401 unauthorized as well if you go to route.
-  
+
   //ALL THE WAY THROUGH LINE 223 - THIS IS THE STUFF WE WERE WORKING ON YESTERDAY BUT IS NOT SCAFFOLDED YET, TRY CHANGING THE DESCRIBE BLOCK TO AN ARROW FUNCTION :)
   // describe('PUT: /api/follow/:userId/story/:storyId', function(){
   //   before(done => {
@@ -140,7 +319,7 @@ describe('User routes', function() {
   //     })
   //     .catch(() => done());
   //   });
-  // 
+  //
   //   before(done => {
   //     new User(testUser2)
   //     .generatePasswordHash(testUser2.password)
@@ -156,7 +335,7 @@ describe('User routes', function() {
   //     })
   //     .catch(() => done());
   //   });
-  //   
+  //
   //   before(done => {
   //     testStory.userId = this.tempUser2._id.toString();
   //     new Story(testStory).save()
@@ -167,7 +346,7 @@ describe('User routes', function() {
   //     })
   //     .catch(() => done());
   //   });
-  // 
+  //
   //   afterEach(done => {
   //     Promise.all([
   //       User.remove({}),
@@ -192,7 +371,7 @@ describe('User routes', function() {
   //       done();
   //     });
   //   });
-  // 
+  //
   //   it('story id should be in the correct format', done => {
   //     request.put(`${url}/api/follow/${this.tempUser._id}/story/${this.tempStory._id}`)
   //     .end((err, res) => {
@@ -201,7 +380,7 @@ describe('User routes', function() {
   //       done();
   //     });
   //   });
-  // 
+  //
   //   it('the id should not already be in the array', done => {
   //     request.put(`${url}/api/follow/${this.tempUser._id}/story/${this.tempStory._id}`)
   //     .end((err, res) => {
@@ -210,7 +389,7 @@ describe('User routes', function() {
   //       done();
   //     });
   //   });
-  // 
+  //
   //   it('should push a story id into an array', done => {
   //     request.put(`${url}/api/follow/${this.tempUser._id}/story/${this.tempStory._id}`)
   //     .end((err, res) => {
@@ -231,9 +410,10 @@ describe('User routes', function() {
   // dashboard get: owned stories: [empty] or [owned]
   // dashboard get: followed stories [empty] or [followed]
 
-});
-// ownedStories: ['ownedId1', 'ownedId2'],
-// followedStories: ['followedId1', 'followedId2'],
+  // ownedStories: ['ownedId1', 'ownedId2'],
+  // followedStories: ['followedId1', 'followedId2'],
 
-// [{type: Schema.Types.ObjectId, ref: 'story'}]
-// {type: Schema.Types.ObjectId, ref: 'story'}
+  // [{type: Schema.Types.ObjectId, ref: 'story'}]
+  // {type: Schema.Types.ObjectId, ref: 'story'}
+
+// });

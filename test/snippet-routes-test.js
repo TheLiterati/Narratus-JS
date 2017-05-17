@@ -9,67 +9,130 @@ const Story = require('../models/story');
 // const Snippet = require('../models/snippet');
 
 mongoose.Promise = Promise;
+
+// *** SERVER SETUP ***
+
 require('../server');
+
 const url = `http://localhost:${process.env.PORT}`;
+
+// *** TEST MODEL SETUP ***
 
 const exampleUser = {
   username: 'Christina',
   password: 'iamawesome',
   email: 'hi@hello.what',
 };
-
 const exampleStory = {
   title: 'The way we built Narratus',
   description: 'Project week - midterm project for JS backend and final project for iOS',
   startSnippet: 'There were seven of us assigned to a team. And then the murders began',
 };
+// const exampleSnippet = {
+//   snippetContent: 'And then the story continued with a user submitted snippet',
+// };
 
-const exampleSnippet = {
-  snippetContent: 'And then the story continued with a user submitted snippet',
-};
+// SNIPPET TESTS
+
+describe('Snippet routes', function () {
+
+  // Setup and teardown
+  beforeEach(done => {
+    new User(exampleUser)
+    .generatePasswordHash(exampleUser.password)
+    .then(user => user.save())
+    .then(user => {
+      this.tempUser = user;
+      return user.generateToken();
+    })
+    .then(token => {
+      this.tempToken = token;
+      done();
+    })
+    .catch(() => done());
+  });
+  beforeEach(done => {
+    exampleStory.userId = this.tempUser._id.toString();
+    new Story(exampleStory).save()
+    .then(story => {
+      this.tempStory = story;
+      done();
+    })
+    .catch(() => done());
+  });
+  afterEach(() => delete exampleStory.userId);
+  afterEach(done => {
+    Promise.all([
+      User.remove({}),
+      Story.remove({}),
+    ])
+    .then(() => done())
+    .catch(() => done());
+  });
+
+  // POST: for snippet tests: 200, 400, 401, 404
+  describe('POST /api/snippet/:storyId', function() {
+
+    // 200 (proper request with valid body, returns a body)
+    describe('proper request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/snippet/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+    // 400 (bad request with invalid body)
+    describe('bad request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/snippet/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+    // 401 (unauthorized with invalid username/password)
+    describe('unauthorized TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/snippet/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
+    // 404 (bad request, not found)
+    describe('bad request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/snippet/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  // End
+  });
 
 
-describe('Snippet Routes', function () {
+
+
+
+
+
+
+
+  // ### PREVIOUS 5/16 ###
 
   describe('POST /api/snippet/:storyId', function() {
 
-    beforeEach(done => {
-      new User(exampleUser)
-      .generatePasswordHash(exampleUser.password)
-      .then(user => user.save())
-      .then(user => {
-        this.tempUser = user;
-        return user.generateToken();
-      })
-      .then(token => {
-        this.tempToken = token;
-        done();
-      })
-      .catch(() => done());
-    });
-
-    beforeEach(done => {
-      exampleStory.userId = this.tempUser._id.toString();
-      new Story(exampleStory).save()
-      .then(story => {
-        this.tempStory = story;
-        done();
-      })
-      .catch(() => done());
-    });
-
-    afterEach(() => delete exampleStory.userId);
-
-    afterEach(done => {
-      Promise.all([
-        User.remove({}),
-        Story.remove({}),
-      ])
-      .then(() => done())
-      .catch(() => done());
-    });
-
-//+##### DO NOT DELETE, please ########
+    //+##### DO NOT DELETE, please ########
 
     // describe('Request with a valid body', () => {
     //
@@ -126,4 +189,5 @@ describe('Snippet Routes', function () {
     // });
 
   });
+// End
 });

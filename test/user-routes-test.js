@@ -28,7 +28,7 @@ const testStory = {
   startSnippet: 'this is the first snippet of the test story',
 };
 
-describe.only('User routes', function() {
+describe('User routes', function() {
 
   describe('POST: /api/signup', function(){
     describe('user filled out form data correctly', function(){

@@ -29,15 +29,31 @@ exports.fetchAccount = function(checkUser) {
   .then(user => user.generateToken())
   .then(token => token)
   .catch(() => Promise.reject(createError(401, 'Not authorized')));
-  
+
+};
+
+exports.populateOwnedStories = function(userId){
+  debug('#populateOwnedStories');
+
+  return User.findById(userId).populate('ownedStories')
+  .then(user => user)
+  .catch(err => Promise.reject(createError(404, err.message)));
+};
+
+exports.populateFollowedStories = function(userId){
+  debug('#populateFollowedStories');
+
+  return User.findById(userId).populate('followedStories')
+  .then(user => user)
+  .catch(err => Promise.reject(createError(404, err.message)));
 };
 
 exports.addToFollowed = function(userId, storyId) {
   debug('#addToFollowed');
-  
+
   if(!userId) return Promise.reject(createError(400, 'Story ID required'));
   if(!storyId) return Promise.reject(createError(400, 'Story ID required'));
-  
+
   return User.findOne(userId)
   .then(user => {
     return Story.findOne(storyId)
@@ -45,4 +61,3 @@ exports.addToFollowed = function(userId, storyId) {
     .catch(() => Promise.reject(createError(400, 'Bad request')));
   });
 };
-

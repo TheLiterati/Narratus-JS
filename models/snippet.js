@@ -8,8 +8,8 @@ const snippetSchema = Schema({
   snippetContent: {type: String, required: true},
   created: {type: Date, default: Date.now, required: true},
   pending: {type: Boolean, default: true},
-  accepted: {type: Boolean},
-  acceptedDate: {type: Date, default: Date.now}, //NOTE stretch
+  approved: {type: Boolean},
+  approvedDate: {type: Date, default: Date.now}, //NOTE stretch
   lastViewDate: {type: Date, default: Date.now}, //NOTE stretch
   bookmark: {type: Boolean}, //NOTE stretch
 });

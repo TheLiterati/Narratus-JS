@@ -11,7 +11,7 @@ mongoose.Promise = Promise;
 
 // *** SERVER SETUP ***
 
-require('../server.js');
+require('../server');
 const url = `http://localhost:${process.env.PORT}`;
 
 // *** TEST MODEL SETUP ***
@@ -201,11 +201,11 @@ describe('User routes', function() {
 
   // NOTE: stretch goals below
 
-  // PUT (stretch)
+  // PUT: (stretch)
 
   // 404 (bad request, not found)
   // PUT: for user tests: 200, 400, 401, 404
-  describe('PUT: /api/tbd', function(){
+  describe('PUT: /api/follow/:userId/story/:storyId', function(){
 
     // 200 (proper request with valid body, returns a body)
     describe('proper request TBD', function(){
@@ -263,7 +263,7 @@ describe('User routes', function() {
     });
   });
 
-  // DELETE (stretch)
+  // DELETE: (stretch)
 
   // 204 (no content)
   describe('DELETE: /api/tbd', function(){
@@ -287,7 +287,8 @@ describe('User routes', function() {
       .catch();
     });
   });
-
+// End  
+});
 
 
 
@@ -415,4 +416,4 @@ describe('User routes', function() {
   // [{type: Schema.Types.ObjectId, ref: 'story'}]
   // {type: Schema.Types.ObjectId, ref: 'story'}
 
-}); // << closes "describe User routes"
+// });

@@ -17,19 +17,26 @@ module.exports = exports = {};
 //   .catch(() => Promise.reject(createError(400, 'You done goofed up the submission')));
 // };
 
-exports.createStory = function(userId, story){
+exports.createStory = function(userId, story, snippet){
   debug('#createStory');
-
+  let newStory;
   return User.findOne(userId)
   .then(user => {
-    return new Story(story).save()
-    .then(newStory => {
+    newStory = new Story(story).save()
+    .then(newStory => {      
       user.ownedStories.push(newStory);
       user.save();
       return newStory;
     })
+    // .then(newStory => newStory.snippets.push(snippet))
+    .then(newStory => {
+      console.log('made it');
+      newStory.addStartSnippet(snippet);
+      newStory.save();
+      return newStory;
+    })
     .then(newStory => Promise.resolve(newStory))
-    .catch(err => Promise.reject(createError(400, err.message)));
+    .catch(() => Promise.reject(createError(400, 'Error in create story')));
   });
 };
 

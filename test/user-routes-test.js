@@ -45,7 +45,7 @@ const testUser = {
 //   startSnippet: 'this is the first snippet of the test story',
 // };????
 
-describe.only('User routes', function() {
+describe('User routes', function() {
 
   // *** USER AUTHENTICATION ***
 

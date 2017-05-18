@@ -46,7 +46,7 @@ exports.populateOwnedStories = function(userId){
 
 exports.populateFollowedStories = function(userId){
   debug('#populateFollowedStories');
-  
+
   return User.findById(userId).populate('followedStories')
   .then(user => user)
   .catch(err => Promise.reject(createError(404, err.message)));

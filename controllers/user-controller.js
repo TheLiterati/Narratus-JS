@@ -51,7 +51,7 @@ exports.populateFollowedStories = function(userId){
 exports.addToFollowed = function(userId, storyId) {
   debug('#addToFollowed');
 
-  if(!userId) return Promise.reject(createError(400, 'Story ID required'));
+  if(!userId) return Promise.reject(createError(400, 'User ID required'));
   if(!storyId) return Promise.reject(createError(400, 'Story ID required'));
   return User.findById(userId)
   .then(user => {
@@ -65,4 +65,13 @@ exports.addToFollowed = function(userId, storyId) {
     })
     .catch(() => Promise.reject(createError(400, 'Bad request')));
   });
+};
+
+exports.logout = function(userId) {
+  debug('#logout');
+  
+  if(!userId) return Promise.reject(createError(400, 'User ID required'));
+  return User.findById(userId)
+  .then(user => user.clearToken())
+  .catch(() => Promise.reject(createError(400, 'Unable to clear token')));
 };

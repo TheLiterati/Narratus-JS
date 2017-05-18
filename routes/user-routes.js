@@ -51,6 +51,13 @@ module.exports = function(router) {
     .catch(err => res.status(err.status).send(err.message));
   });
 
+  router.put('/logout/:userId', bearerAuth, (req, res) => {
+    debug('#PUT /logout');
+    
+    userController.logout(req.params.userId)
+    .then(token => res.json(token))
+    .catch(err => res.status(err.status).send(err.message));
+  });
 
   return router;
 };

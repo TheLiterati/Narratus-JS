@@ -19,11 +19,14 @@ exports.createSnippet = function(storyId, snippet){
     // console.log('StoryId.snippets: \n', story.pendingSnippets);
     return new Snippet(snippet).save()
     .then(newSnippet => {
-      // console.log('Pre-pushed snippet: \n', newSnippet);
-      story.pendingSnippets.push(newSnippet);
-      story.save();
-      // console.log('Story\'s snippet array: \n', story.pendingSnippets);
-      return newSnippet;
+      if (story.pendingSnippetCount < 10) {
+        story.pendingSnippets.push(newSnippet);
+        story.pendingSnippetCount++;
+        console.log('pending count in if conditional', story.pendingSnippetCount);
+        story.save();
+        return newSnippet;
+      }
+      console.log('Snippet Limit of 10 is reached');
     })
     .then(newSnippet => Promise.resolve(newSnippet))
     .catch(err => Promise.reject(createError(400, err.message)));

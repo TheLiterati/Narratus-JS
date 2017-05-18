@@ -18,7 +18,6 @@ exports.createAccount = function(user, password) {
   return newUser.generatePasswordHash(password)
   .then(user => user.save())
   .then(user => user.generateToken())
-  // .then(user => user)
   .then(token => token)
   .catch(() => Promise.reject(createError(400, 'Bad request')));
 };
@@ -34,13 +33,10 @@ exports.fetchAccount = function(checkUser, user) {
 
 };
 
-// exports.getUser = function()
-
 exports.populateOwnedStories = function(userId){
   debug('#populateOwnedStories');
   return User.findById(userId).populate('ownedStories')
   .then(user => user)
-  // .then(console.log('req.user', req.user))
   .catch(err => Promise.reject(createError(404, err.message)));
 };
 
@@ -59,7 +55,6 @@ exports.addToFollowed = function(userId, storyId) {
   if(!storyId) return Promise.reject(createError(400, 'Story ID required'));
   return User.findById(userId)
   .then(user => {
-    // console.log(user);
     return Story.findById(storyId)
     .then(story => {
       console.log(story);
@@ -73,7 +68,7 @@ exports.addToFollowed = function(userId, storyId) {
 
 exports.logout = function(userId) {
   debug('#logout');
-  
+
   if(!userId) return Promise.reject(createError(400, 'User ID required'));
   return User.findById(userId)
   .then(user => user.clearToken())

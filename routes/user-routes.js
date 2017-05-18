@@ -31,7 +31,7 @@ module.exports = function(router) {
 
   // router.get('/getuser', bearerAuth, (req, res) => {
   //   debug('#GET /getuser');
-  //   
+  //
   //   userController.getUser(req.auth)
   //   .then(user => res.json(user))
   //   .catch(err => res.status(err.status).send(err.message));
@@ -39,15 +39,15 @@ module.exports = function(router) {
 
   router.get('/dashboard', bearerAuth, (req, res) => {
     debug('#GET /dashboard');
-    console.log('req', req);
 
     let dashboardStories = {};
+    
     userController.populateOwnedStories(req.user._id)
-    .then(ownedStories => dashboardStories.ownedStories = ownedStories)
+    .then(ownedStories => dashboardStories.ownedStories = ownedStories.ownedStories)
     .then(()=> {
       return userController.populateFollowedStories(req.user._id)
       .then(followedStories => {
-        dashboardStories.followedStories = followedStories;
+        dashboardStories.followedStories = followedStories.followedStories;
         res.json(dashboardStories);
       })
       .catch(err => res.status(err.status).send(err.message));
@@ -65,7 +65,7 @@ module.exports = function(router) {
 
   router.put('/logout/:userId', bearerAuth, (req, res) => {
     debug('#PUT /logout');
-    
+
     userController.logout(req.params.userId)
     .then(token => res.json(token))
     .catch(err => res.status(err.status).send(err.message));

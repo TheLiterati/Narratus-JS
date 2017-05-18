@@ -16,24 +16,36 @@ module.exports = function(router) {
 
     userController.createAccount(req.body, tempPassword)
     .then(token => res.json(token))
+    // .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.mesage));
   });
 
   router.get('/signin', basicAuth, (req, res) => {
     debug('#GET /signin');
 
-    userController.fetchAccount(req.auth)
+    userController.fetchAccount(req.auth, req.body)
     .then(token => res.json(token))
+    .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.message));
   });
 
-  router.get('/dashboard/:userId', bearerAuth, (req, res) => {
+  // router.get('/getuser', bearerAuth, (req, res) => {
+  //   debug('#GET /getuser');
+  //   
+  //   userController.getUser(req.auth)
+  //   .then(user => res.json(user))
+  //   .catch(err => res.status(err.status).send(err.message));
+  // });
+
+  router.get('/dashboard', bearerAuth, (req, res) => {
     debug('#GET /dashboard');
+    console.log('req', req);
+
     let dashboardStories = {};
-    userController.populateOwnedStories(req.params.userId)
+    userController.populateOwnedStories(req.user._id)
     .then(ownedStories => dashboardStories.ownedStories = ownedStories)
     .then(()=> {
-      return userController.populateFollowedStories(req.body.userId)
+      return userController.populateFollowedStories(req.user._id)
       .then(followedStories => {
         dashboardStories.followedStories = followedStories;
         res.json(dashboardStories);
@@ -43,10 +55,10 @@ module.exports = function(router) {
     .catch(err => res.status(err.status).send(err.message));
   });
 
-  router.put('/follow/:userId/story/:storyId', bearerAuth, (req, res) => {
+  router.put('/follow/story/:storyId', bearerAuth, (req, res) => {
     debug('#PUT /follow/:storyId');
 
-    userController.addToFollowed(req.params.userId, req.params.storyId)
+    userController.addToFollowed(req.user._id, req.params.storyId)
     .then(story => res.json(story))
     .catch(err => res.status(err.status).send(err.message));
   });

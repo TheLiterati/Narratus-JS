@@ -18,25 +18,29 @@ exports.createAccount = function(user, password) {
   return newUser.generatePasswordHash(password)
   .then(user => user.save())
   .then(user => user.generateToken())
+  // .then(user => user)
   .then(token => token)
   .catch(() => Promise.reject(createError(400, 'Bad request')));
 };
 
-exports.fetchAccount = function(checkUser) {
+exports.fetchAccount = function(checkUser, user) {
   debug('#fetchAccount');
   return User.findOne({username: checkUser.username})
   .then(user => user.comparePasswordHash(checkUser.password))
   .then(user => user.generateToken())
+  .then(user => user)
   .then(token => token)
   .catch(() => Promise.reject(createError(401, 'Not authorized')));
 
 };
 
+// exports.getUser = function()
+
 exports.populateOwnedStories = function(userId){
   debug('#populateOwnedStories');
-
   return User.findById(userId).populate('ownedStories')
   .then(user => user)
+  // .then(console.log('req.user', req.user))
   .catch(err => Promise.reject(createError(404, err.message)));
 };
 

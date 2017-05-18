@@ -29,14 +29,15 @@ module.exports = function(router) {
 
   router.get('/dashboard/:userId', bearerAuth, (req, res) => {
     debug('#GET /dashboard');
-
-    // req.body.userId = req.user._id;
-
-    return userController.populateOwnedStories(req.params.userId)
-    .then(ownedStories => res.json(ownedStories))
+    let dashboardStories = {};
+    userController.populateOwnedStories(req.params.userId)
+    .then(ownedStories => dashboardStories.ownedStories = ownedStories)
     .then(()=> {
       return userController.populateFollowedStories(req.body.userId)
-      .then(followedStories => res.json(followedStories))
+      .then(followedStories => {
+        dashboardStories.followedStories = followedStories;
+        res.json(dashboardStories);
+      })
       .catch(err => res.status(err.status).send(err.message));
     })
     .catch(err => res.status(err.status).send(err.message));

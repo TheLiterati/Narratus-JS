@@ -277,6 +277,207 @@ describe('User routes', function() {
 // End
 });
 
+describe('User integration tests', function() {
+
+  describe('POST: /api/signup', function(){
+
+    describe('Testing the create account method', function(){
+      it('Should take in username, password, and email', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should create a new user', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should create a hashed password', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should have a unique token', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  });
+
+  describe('GET: /api/signin', function(){
+
+    describe('Testing the fetch account method', function(){
+      it('Should return a user when given a user id', done => {
+        // TODO:
+        request.get(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should generate a new token', done => {
+        // TODO:
+        request.get(`${url}/api/signin`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+    }); // testing the create
+
+  }); // end get signin
+
+  describe('GET: /api/dashboard', function(){
+
+    describe('Populate owned stories method', function(){
+      it('Should return a user when given an id', done => {
+        // TODO:
+        request.get(`${url}/api/dashboard`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should return the user\'s owned stories', done => {
+        // TODO:
+        request.get(`${url}/api/dashboard`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+    }); // describe populate
+
+    describe('Testing the populate followed stories method', function(){
+      it('Should return a user when given an id', done => {
+        // TODO:
+        request.get(`${url}/api/dashboard`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should return the user\'s followed stories', done => {
+        // TODO:
+        request.get(`${url}/api/dashboard`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); // describe testing
+
+  }); // end get signin
+
+  describe('PUT: /api/follow/story/:storyId', function(){
+
+    describe('Add to followed method', function(){
+      it('Should take a user id into story id', done => {
+        // TODO:
+        request.get(`${url}/api/follow/story/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should return a specific user when given an id', done => {
+        // TODO:
+        request.get(`${url}/api/follow/story/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should return a specific story when given an id', done => {
+        // TODO:
+        request.get(`${url}/api/follow/story/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should not include the story in the user\'s followed stories', done => {
+        // TODO:
+        request.get(`${url}/api/follow/story/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should add the story to the user\'s followed stories', done => {
+        // TODO:
+        request.get(`${url}/api/follow/story/:storyId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+
+    }); // testing the create
+
+  }); // end get signin
+
+  describe('PUT: /api/logout/:userId', function(){
+
+    describe('Testing the logout method', function(){
+      it('Should take in a user id', done => {
+        // TODO:
+        request.put(`${url}/api/logout/:userId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should return a user when given an id', done => {
+        // TODO:
+        request.put(`${url}/api/logout/:userId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('Should reset token to an empty string', done => {
+        // TODO:
+        request.put(`${url}/api/logout/:userId`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+    }); // end describe testing create
+
+  }); // end of put logout
+
+}); // end integration tests
 
 
 

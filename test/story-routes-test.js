@@ -209,9 +209,175 @@ describe('Story routes', function() {
 // End
 });
 
-
-
-
+describe('Story integration tests', function() {
+  
+  describe('POST: /api/story', function() {
+    
+    describe('Testing the create story method', function() {
+      
+      it('Should return a user when given an id', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should create a new story', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should begin with an empty ownedStories array', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should push the new story into the owner\'s ownedStories array', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should push the startSnippet into the story\'s snippet array', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+    });  //create story
+    
+  });// POST
+  
+  describe('GET: /api/story', function() {
+    
+    describe('Testing the fetch story method', function() {
+      
+      it('Should return all of the existing stories', done => {
+        // TODO:
+        request.get(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+    }); //fetch story
+    
+  }); // GET
+  
+  describe('GET: /story/:storyId', function() {
+    
+    describe('Testing the fetch stories method', function() {
+      
+      it('Should return a story when given an id', done => {
+        // TODO:
+        request.get(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should return all of the snippets in the story\'s snippet array', done => {
+        // TODO:
+        request.get(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+    }); //fetch stories
+    
+  }); // GET
+  
+  describe('PUT: /story/:storyId', function() {
+    
+    describe('Testing the update story method', function() {
+      
+      it('Should take in username, password, and email', done => {
+        // TODO:
+        request.put(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should take in username, password, and email', done => {
+        // TODO:
+        request.put(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should take in username, password, and email', done => {
+        // TODO:
+        request.put(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should take in username, password, and email', done => {
+        // TODO:
+        request.put(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+    }); // update story
+    
+  }); // PUT
+  
+  describe('DELETE: /story/:storyId', function() {
+    
+    describe('Testing the delete story method', function() {
+      
+      it('Should return a story when given an id', done => {
+        // TODO:
+        request.delete(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+      it('Should remove the story from the database', done => {
+        // TODO:
+        request.delete(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+      
+    }); // delete story
+    
+  }); // DELETE
+  
+}); //end story integration tests
 
 
 

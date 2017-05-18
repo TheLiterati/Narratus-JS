@@ -69,7 +69,7 @@ describe('Snippet routes', function () {
   //   .then(() => done())
   //   .catch(() => done());
   // });
-/*
+
   // POST: for snippet tests: 200, 400, 401, 404
   describe('POST /api/snippet/:storyId', function() {
 
@@ -119,7 +119,6 @@ describe('Snippet routes', function () {
     });
   // End
   });
-*/
   // ### PREVIOUS 5/16 ###
   describe('POST /api/snippet/:storyId', function() {
     beforeEach(done => {

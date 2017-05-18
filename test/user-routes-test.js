@@ -24,13 +24,6 @@ const testUser = {
   // 'followedId1', 'followedId2'
   followedStories: [],
 };
-
-// const testUser2 = {
-//   username: 'michael',
-//   password: 'bestpassword',
-//   email: 'michael@narratus.io',
-// };
-
 // const testUser2 = {
 //   username: 'michael',
 //   password: 'thesecondbestpasswordever',
@@ -53,23 +46,47 @@ describe('User routes', function() {
   describe('GET: /api/signup', function(){
 
     // 200 (proper request with valid body, returns a token)
-    // NOTE: Cannot get a user or token on signup page.
+    describe('proper request TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
 
     // 401 (unauthorized with invalid username/password)
-    // NOTE: Cannot get invalid credentials on signup page.
+    describe('unauthorized TBD', function(){
+      it('TBD', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
     // 404 (bad request, not found)
-    describe('Signing in on the signup page', function(){
-      it('Should result in a bad request 404 not found', done => {
+    describe('bad request TBD', function(){
+      it('TBD', done => {
         // TODO:
-        request.get(`${url}/api/signup`)
+        request.post(`${url}/api/signup`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
           done();
         });
       });
     });
-  // End GET
+
+    // NOTE: this may or may not be needed here
+    after(done => {
+      User.remove({})
+      .then(done())
+      .catch();
+    });
   });
 
   // *** USER TESTS ***
@@ -78,8 +95,8 @@ describe('User routes', function() {
   describe('POST: /api/signup', function(){
 
     // 200 (proper request with valid body, returns a token)
-    describe('User filled out form data correctly', function(){
-      it('Should return a token', done => {
+    describe('user filled out form data correctly', function(){
+      it('should return a token', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
         .end((err, res) => {
@@ -91,23 +108,10 @@ describe('User routes', function() {
     });
 
     // 400 (bad request with invalid body)
-    describe('User entered no form data', function(){
-      it('Should respond with a 400 bad request error', done => {
+    describe('user entered missing or incorrect form data', function(){
+      it('should respond with a 400 bad request error', done => {
         request.post(`${url}/api/signup`)
-        .send({ username: '' })
-        .send({ password: '' })
-        .send({ email: '' })
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    describe('User already exists', function(){
-      it('Should respond with a 400 bad request error', done => {
-        request.post(`${url}/api/signup`)
-        .send(testUser)
+        .send('badrequest')
         .end((err, res) => {
           expect(res.status).to.equal(400);
           done();
@@ -116,9 +120,19 @@ describe('User routes', function() {
     });
 
     // 401 (unauthorized with invalid username/password)
-    // NOTE: Cannot post unauthorized user because it doesn't yet exist.
+    describe('user submitted invalid username or password', function(){
+      it('should respond with a 401 unauthorized error', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .send('')
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
-    // NOTE: Removing this will result in "Unhandled rejection MongoError"
+    // NOTE: this may or may not be needed here
     after(done => {
       User.remove({})
       .then(done())
@@ -146,8 +160,8 @@ describe('User routes', function() {
     });
 
     // 200 (proper request with valid body, returns a token)
-    describe('User logged in with correct credentials', function() {
-      it('Should respond with 200 ok status and token', done => {
+    describe('user logged in with correct credentials', function() {
+      it('should respond with 200 ok status and token', done => {
         request.get(`${url}/api/signin`)
         .auth('christina', 'thebestpasswordever')
         .end((err, res) => {
@@ -159,24 +173,23 @@ describe('User routes', function() {
     });
 
     // 401 (unauthorized with invalid username/password)
-    describe('User entered incorrect login information', function(){
-      it('Should repond with a 401 unauthorized error', done => {
+    describe('user entered incorrect login information', function(){
+      it('should repond with a 401 unauthorized error', done => {
         request.get(`${url}/api/signin`)
-        .auth('wrong-user', 'wrong-password')
+        .auth('wronguser', 'wrongpassword')
         .end((err, res) => {
           expect(res.status).to.equal(401);
           done();
         });
       });
     });
-  // End GET
   });
 
   // GET: for user tests: 404
   describe('GET: /api/signin', function() {
     // 404 (bad request, not found)
-    describe('User put in a bad url path', function() {
-      it('Return a bad request 404 not found', done => {
+    describe('user put in a bad url path', function() {
+      it('return a bad request 404 not found', done => {
         request.get(`${url}/api/badrequest`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -195,7 +208,7 @@ describe('User routes', function() {
   describe('PUT: /api/follow/:userId/story/:storyId', function(){
 
     // 200 (proper request with valid body, returns a body)
-    describe('Proper request TBD', function(){
+    describe('proper request TBD', function(){
       it('TBD', done => {
         // TODO:
         request.post(`${url}/api/signin`)
@@ -207,7 +220,7 @@ describe('User routes', function() {
     });
 
     // 400 (bad request with invalid body)
-    describe('Bad request invalid TBD', function(){
+    describe('bad request invalid TBD', function(){
       it('TBD', done => {
         // TODO:
         request.post(`${url}/api/signin`)
@@ -219,7 +232,7 @@ describe('User routes', function() {
     });
 
     // 401 (unauthorized with invalid username/password)
-    describe('Unauthorized TBD', function(){
+    describe('unauthorized TBD', function(){
       it('TBD', done => {
         // TODO:
         request.post(`${url}/api/signin`)
@@ -231,7 +244,7 @@ describe('User routes', function() {
     });
 
     // 404 (bad request, not found)
-    describe('Bad request TBD', function(){
+    describe('bad request not out TBD', function(){
       it('TBD', done => {
         // TODO:
         request.post(`${url}/api/signin`)
@@ -256,7 +269,7 @@ describe('User routes', function() {
   describe('DELETE: /api/tbd', function(){
 
     // 200 (proper request with valid body, returns a body)
-    describe('Proper request TBD', function(){
+    describe('proper request TBD', function(){
       it('TBD', done => {
         // TODO:
         request.post(`${url}/api/signin`)
@@ -274,210 +287,9 @@ describe('User routes', function() {
       .catch();
     });
   });
-// End
+// End  
 });
 
-describe('User integration tests', function() {
-
-  describe('POST: /api/signup', function(){
-
-    describe('Testing the create account method', function(){
-      it('Should take in username, password, and email', done => {
-        // TODO:
-        request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should create a new user', done => {
-        // TODO:
-        request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should create a hashed password', done => {
-        // TODO:
-        request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should have a unique token', done => {
-        // TODO:
-        request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    });
-  });
-
-  describe('GET: /api/signin', function(){
-
-    describe('Testing the fetch account method', function(){
-      it('Should return a user when given a user id', done => {
-        // TODO:
-        request.get(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should generate a new token', done => {
-        // TODO:
-        request.get(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-    }); // testing the create
-
-  }); // end get signin
-
-  describe('GET: /api/dashboard', function(){
-
-    describe('Populate owned stories method', function(){
-      it('Should return a user when given an id', done => {
-        // TODO:
-        request.get(`${url}/api/dashboard`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should return the user\'s owned stories', done => {
-        // TODO:
-        request.get(`${url}/api/dashboard`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-    }); // describe populate
-
-    describe('Testing the populate followed stories method', function(){
-      it('Should return a user when given an id', done => {
-        // TODO:
-        request.get(`${url}/api/dashboard`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should return the user\'s followed stories', done => {
-        // TODO:
-        request.get(`${url}/api/dashboard`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    }); // describe testing
-
-  }); // end get signin
-
-  describe('PUT: /api/follow/story/:storyId', function(){
-
-    describe('Add to followed method', function(){
-      it('Should take a user id into story id', done => {
-        // TODO:
-        request.get(`${url}/api/follow/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should return a specific user when given an id', done => {
-        // TODO:
-        request.get(`${url}/api/follow/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should return a specific story when given an id', done => {
-        // TODO:
-        request.get(`${url}/api/follow/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should not include the story in the user\'s followed stories', done => {
-        // TODO:
-        request.get(`${url}/api/follow/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should add the story to the user\'s followed stories', done => {
-        // TODO:
-        request.get(`${url}/api/follow/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-
-    }); // testing the create
-
-  }); // end get signin
-
-  describe('PUT: /api/logout/:userId', function(){
-
-    describe('Testing the logout method', function(){
-      it('Should take in a user id', done => {
-        // TODO:
-        request.put(`${url}/api/logout/:userId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should return a user when given an id', done => {
-        // TODO:
-        request.put(`${url}/api/logout/:userId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should reset token to an empty string', done => {
-        // TODO:
-        request.put(`${url}/api/logout/:userId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-    }); // end describe testing create
-
-  }); // end of put logout
-
-}); // end integration tests
 
 
 

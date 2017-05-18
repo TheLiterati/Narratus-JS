@@ -2,7 +2,7 @@
 
 const snippetController = require('../controllers/snippet-controller.js');
 const debug = require('debug')('narratus:snippet-routes.js');
-const createError = require('http-errors');
+// const createError = require('http-errors');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 module.exports = function(router){

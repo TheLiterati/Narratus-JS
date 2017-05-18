@@ -12,6 +12,8 @@ module.exports = exports = {};
 exports.createSnippet = function(storyId, snippet){
   debug('#createSnippet');
   // console.log('Snippet Body: \n', snippet);
+  if (!snippet) return Promise.reject(createError(400, 'Snippet required'));
+
   return Story.findById(storyId)
   .then(story => {
     // console.log('StoryId.snippets: \n', story.pendingSnippets);
@@ -25,7 +27,8 @@ exports.createSnippet = function(storyId, snippet){
     })
     .then(newSnippet => Promise.resolve(newSnippet))
     .catch(err => Promise.reject(createError(400, err.message)));
-  });
+  })
+  .catch(err => Promise.reject(createError(404, err.message)));
 };
 
 exports.approveSnippet = function(storyId, snippet){

@@ -120,13 +120,8 @@ describe('Snippet routes', function () {
   // End
   });
 */
-
   // ### PREVIOUS 5/16 ###
-
   describe('POST /api/snippet/:storyId', function() {
-
-    //+##### DO NOT DELETE, please ########
-
     beforeEach(done => {
       new User(exampleUser)
       .generatePasswordHash(exampleUser.password)
@@ -177,7 +172,6 @@ describe('Snippet routes', function () {
         });
       });
     });
-
     describe('a request with an invalid token', () => {
       it('should respond with a 401 unauthorized error', done => {
         request.post(`${url}/api/snippet/${this.tempStory._id}`)
@@ -189,7 +183,6 @@ describe('Snippet routes', function () {
         });
       });
     });
-
     describe('a request with an invalid story ID', () => {
       it('should respond with a 404 error not found', done => {
         request.post(`${url}/api/snippet/story1234`)
@@ -212,8 +205,6 @@ describe('Snippet routes', function () {
         });
       });
     });
-
-
   });
 // End
 //
@@ -291,8 +282,6 @@ describe('Snippet routes', function () {
         });
       });
     });
-
-//not working? 404 error
     describe('a bad request with an invalid body', () => {
       it('should respond with a 400 invalid body error', done => {
         request.post(`${url}/api/snippet/what`)
@@ -304,19 +293,30 @@ describe('Snippet routes', function () {
         });
       });
     });
-    // describe('an approved snippet', () => {
-    //   it('should push the approved snippet to the snippet array', done => {
-    //     request.post(`${url}/api/snippet/${this.tempStory._id}`)
-    //     .send(exampleSnippet)
-    //     .set({Authorization: `Bearer ${this.tempToken}`})
-    //     .end((err, res) => {
-    //       expect(res.body.exampleSnippet.snippet[0].snippetContent).to.equal(exampleSnippet.snippetContent);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('an approved snippet', () => {
+      it('should push the approved snippet to the snippet array', done => {
+        request.post(`${url}/api/snippet/${this.tempStory._id}`)
+        .send(exampleSnippet)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          expect(res.body.exampleSnippet.snippet[0].snippetContent).to.equal(exampleSnippet.snippetContent);
+          done();
+        });
+      });
+    });
   });
 
+}); //end snippet routes test
 
 
-});
+
+describe('Snippet integration tests', () => {
+
+  describe('POST :/api/snippet/:storyId', () => {
+
+  }); //end post :/api/snippit/:storyId test
+
+
+
+
+}); //end snippet integration test

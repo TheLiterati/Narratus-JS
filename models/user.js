@@ -74,4 +74,16 @@ userSchema.methods.generateToken = function() {
   });
 };
 
+userSchema.methods.clearToken = function() {
+  return new Promise((resolve, reject) => {
+    this.findHash = '';
+    this.save()
+    .then(() => resolve(this.findHash))
+    .catch(err => {
+      console.log(err);
+      reject(createError(401, 'Generate token failed'));
+    });
+  });
+};
+
 module.exports = mongoose.model('user', userSchema);

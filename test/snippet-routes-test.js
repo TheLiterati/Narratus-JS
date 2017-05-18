@@ -28,48 +28,48 @@ const exampleStory = {
   description: 'Project week - midterm project for JS backend and final project for iOS',
   startSnippet: 'There were seven of us assigned to a team. And then the murders began',
 };
-// const exampleSnippet = {
-//   snippetContent: 'And then the story continued with a user submitted snippet',
-// };
+const exampleSnippet = {
+  snippetContent: 'And then the story continued with a user submitted snippet',
+};
 
 // SNIPPET TESTS
 
 describe('Snippet routes', function () {
 
   // Setup and teardown
-  beforeEach(done => {
-    new User(exampleUser)
-    .generatePasswordHash(exampleUser.password)
-    .then(user => user.save())
-    .then(user => {
-      this.tempUser = user;
-      return user.generateToken();
-    })
-    .then(token => {
-      this.tempToken = token;
-      done();
-    })
-    .catch(() => done());
-  });
-  beforeEach(done => {
-    exampleStory.userId = this.tempUser._id.toString();
-    new Story(exampleStory).save()
-    .then(story => {
-      this.tempStory = story;
-      done();
-    })
-    .catch(() => done());
-  });
-  afterEach(() => delete exampleStory.userId);
-  afterEach(done => {
-    Promise.all([
-      User.remove({}),
-      Story.remove({}),
-    ])
-    .then(() => done())
-    .catch(() => done());
-  });
-
+  // beforeEach(done => {
+  //   new User(exampleUser)
+  //   .generatePasswordHash(exampleUser.password)
+  //   .then(user => user.save())
+  //   .then(user => {
+  //     this.tempUser = user;
+  //     return user.generateToken();
+  //   })
+  //   .then(token => {
+  //     this.tempToken = token;
+  //     done();
+  //   })
+  //   .catch(() => done());
+  // });
+  // beforeEach(done => {
+  //   exampleStory.userId = this.tempUser._id.toString();
+  //   new Story(exampleStory).save()
+  //   .then(story => {
+  //     this.tempStory = story;
+  //     done();
+  //   })
+  //   .catch(() => done());
+  // });
+  // afterEach(() => delete exampleStory.userId);
+  // afterEach(done => {
+  //   Promise.all([
+  //     User.remove({}),
+  //     Story.remove({}),
+  //   ])
+  //   .then(() => done())
+  //   .catch(() => done());
+  // });
+/*
   // POST: for snippet tests: 200, 400, 401, 404
   describe('POST /api/snippet/:storyId', function() {
 
@@ -119,7 +119,7 @@ describe('Snippet routes', function () {
     });
   // End
   });
-
+*/
 
 
 
@@ -134,38 +134,71 @@ describe('Snippet routes', function () {
 
     //+##### DO NOT DELETE, please ########
 
-    // describe('Request with a valid body', () => {
-    //
-    //   it('should return a snippet and 200 response', done => {
-    //     request.post(`${url}/api/snippet/${this.tempStory._id}`)
-    //     .set({Authorization: `Bearer ${this.tempToken}`})
-    //     .send(exampleSnippet)
-    //     .end((err, res) => {
-    //       let date = new Date(res.body.created).toString();
-    //       expect(res.body.snippetContent).to.equal('And then the story continued with a user submitted snippet');
-    //       expect(res.body.pending).to.equal(true);
-    //       expect(res.body.userId[0]).to.equal(`${this.tempUser._id}`);
-    //       expect(date).to.not.equal('Invalid Date');
-    //       expect(res.status).to.equal(200);
-    //       done();
-    //     });
-    //   });
-    // });
-    //
-    // describe('a request with an invalid token', () => {
-    //   it('should respond with a 401 unauthorized error', done => {
-    //     request.post(`${url}/api/snippet/${this.tempStory._id}`)
-    //     .set({Authorization: 'Bad token'})
-    //     .send(exampleSnippet)
-    //     .end((err, res) => {
-    //       expect(res.status).to.equal(401);
-    //       done();
-    //     });
-    //   });
-    // });
+    beforeEach(done => {
+      new User(exampleUser)
+      .generatePasswordHash(exampleUser.password)
+      .then(user => user.save())
+      .then(user => {
+        this.tempUser = user;
+        return user.generateToken();
+      })
+      .then(token => {
+        this.tempToken = token;
+        done();
+      })
+      .catch(() => done());
+    });
+    beforeEach(done => {
+      exampleStory.userId = this.tempUser._id.toString();
+      new Story(exampleStory).save()
+      .then(story => {
+        this.tempStory = story;
+        done();
+      })
+      .catch(() => done());
+    });
+    afterEach(() => delete exampleStory.userId);
+    afterEach(done => {
+      Promise.all([
+        User.remove({}),
+        Story.remove({}),
+      ])
+      .then(() => done())
+      .catch(() => done());
+    });
+
+    describe('Request with a valid body', () => {
+
+      it('should return a snippet and 200 response', done => {
+        request.post(`${url}/api/snippet/${this.tempStory._id}`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleSnippet)
+        .end((err, res) => {
+          let date = new Date(res.body.created).toString();
+          expect(res.body.snippetContent).to.equal('And then the story continued with a user submitted snippet');
+          expect(res.body.pending).to.equal(true);
+          expect(res.body.userId[0]).to.equal(`${this.tempUser._id}`);
+          expect(date).to.not.equal('Invalid Date');
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+
+    describe('a request with an invalid token', () => {
+      it('should respond with a 401 unauthorized error', done => {
+        request.post(`${url}/api/snippet/${this.tempStory._id}`)
+        .set({Authorization: 'Bad token'})
+        .send(exampleSnippet)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
     describe('a request with an invalid story ID', () => {
-      it('should respond with a 404 error not found', done => {
+      it.only('should respond with a 404 error not found', done => {
         request.post(`${url}/api/snippet/story12345`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)
@@ -176,17 +209,17 @@ describe('Snippet routes', function () {
       });
     });
 
-    // describe('a bad request with an invalid body', () => {
-    //   it('should respond with a 400 invalid body error', done => {
-    //     request.post(`${url}/api/snippet/${this.tempStory._id}`)
-    //     .set({Authorization: `Bearer ${this.tempToken}`})
-    //     .send('nothing')
-    //     .end((err, res) => {
-    //       expect(res.status).to.equal(400);
-    //       done();
-    //     });
-    //   });
-    // });
+    describe('a bad request with an invalid body', () => {
+      it('should respond with a 400 invalid body error', done => {
+        request.post(`${url}/api/snippet/${this.tempStory._id}`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send('nothing')
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
   });
 // End
 });

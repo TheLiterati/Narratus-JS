@@ -23,18 +23,18 @@ exports.createStory = function(userId, story, snippet){
   return User.findOne(userId)
   .then(user => {
     newStory = new Story(story).save()
-    .then(newStory => {      
+    .then(newStory => {
       user.ownedStories.push(newStory);
       user.save();
       return newStory;
     })
-    // .then(newStory => newStory.snippets.push(snippet))
-    .then(newStory => {
-      console.log('made it');
-      newStory.addStartSnippet(snippet);
-      newStory.save();
-      return newStory;
-    })
+    .then(newStory => newStory.snippets.push(snippet))
+    // .then(newStory => {
+    //   console.log('made it');
+    //   newStory.addStartSnippet(snippet);
+    //   newStory.save();
+    //   return newStory;
+    // })
     .then(newStory => Promise.resolve(newStory))
     .catch(() => Promise.reject(createError(400, 'Error in create story')));
   });

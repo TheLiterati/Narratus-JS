@@ -1,6 +1,6 @@
 {
   "name": "narratus-js",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Narratus will allow crowd written stories to be easily shared across the world",
   "main": "server.js",
   "directories": {

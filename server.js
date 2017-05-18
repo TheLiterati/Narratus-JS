@@ -32,4 +32,5 @@ app.use('/api', snippetRoutes(router));
 
 app.listen(PORT, function(){
   console.log('Listening on port', PORT);
+  console.log('Running version 0.3.0');
 });

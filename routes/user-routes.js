@@ -54,8 +54,8 @@ module.exports = function(router) {
   router.put('/logout/:userId', bearerAuth, (req, res) => {
     debug('#PUT /logout');
     
-    userController.logout(req.body.userId)
-    .then()
+    userController.logout(req.params.userId)
+    .then(token => res.json(token))
     .catch(err => res.status(err.status).send(err.message));
   });
 

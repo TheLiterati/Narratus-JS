@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const debug = require('debug')('narratus:story-controller');
 const createError = require('http-errors');
-
-
+const Snippet = require('../models/snippet.js');
 
 const storySchema = Schema({
   userId: [{type: Schema.Types.ObjectId, required: true, ref: 'user'}],
@@ -27,7 +26,11 @@ storySchema.methods.addStartSnippet = function(snippet) {
   
   return new Promise((resolve, reject) => {
     if(!snippet) return reject(createError(401, 'Story push failed'));
-    this.snippets.push(snippet);
+    let newSnippet = new Snippet();
+    console.log('newSnippet', newSnippet);
+    newSnippet.snippetContent = snippet;
+    newSnippet.save();
+    this.snippets.push(newSnippet);
     resolve(this);
   });
 };

@@ -253,6 +253,7 @@ describe('Snippet integration tests', () => {
     describe('The createSnippet method', () => {
 
       it('Should return a story with a story id passed in', done => {
+
         request.post(`${url}/api/snippet/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)

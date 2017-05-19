@@ -52,16 +52,9 @@ describe('User routes', function() {
   // GET: for unauthenticated user: 200, 401, 404
   describe('GET: /api/signup', function(){
 
-    // 200 (proper request with valid body, returns a token)
-    // NOTE: Cannot get a user or token on signup page.
-
-    // 401 (unauthorized with invalid username/password)
-    // NOTE: Cannot get invalid credentials on signup page.
-
     // 404 (bad request, not found)
     describe('Signing in on the signup page', function(){
       it('Should result in a bad request 404 not found', done => {
-        // TODO:
         request.get(`${url}/api/signup`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -277,66 +270,111 @@ describe('User routes', function() {
 // End
 });
 
-describe('User integration tests', function() {
+describe('User integration tests', () => {
 
-  describe('POST: /api/signup', function(){
+  // Test user setup and teardown
+  before(done => {
+    new User(testUser)
+    .generatePasswordHash(testUser.password)
+    .then(user => user.save())
+    .then(user => {
+      this.tempUser = user;
+      return user.generateToken();
+    })
+    .then(token => {
+      this.tempToken = token;
+      done();
+    })
+    .catch();
+  });
+  after(done => {
+    User.remove({})
+    .then(() => done())
+    .catch(done);
+  });
 
-    describe('Testing the create account method', function(){
-      it('Should take in username, password, and email', done => {
-        // TODO:
+  describe('POST: /api/signup', () => {
+    
+    describe('Testing the create account method', () => {
+
+      it('Should create a new user', done => {
         request.post(`${url}/api/signup`)
+        .send(testUser)
         .end((err, res) => {
-          expect(res.status).to.equal(404);
+          console.log('res.body', this.tempUser);          
+          expect(res.body).to.be.a('object');
           done();
         });
       });
-
-      it('Should create a new user', done => {
-        // TODO:
+      
+      it('Should create a token', done => {
         request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
+        .send(testUser)
+        .end(() => {
+          console.log('this.temptoken', this.tempToken);
+          expect(this.tempToken).to.be.a('string');
           done();
         });
       });
 
       it('Should create a hashed password', done => {
-        // TODO:
         request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
+        .send(testUser)
+        .end(() => {
+          expect(this.tempUser.password).to.not.equal(testUser.password);
           done();
         });
       });
-
-      it('Should have a unique token', done => {
-        // TODO:
+      
+      it('Should create a username', done => {
         request.post(`${url}/api/signup`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
+        .send(testUser)
+        .end(() => {
+          expect(this.tempUser.username).to.equal(testUser.username);
+          done();
+        });
+      });
+      
+      it('Should create an email', done => {
+        request.post(`${url}/api/signup`)
+        .send(testUser)
+        .end(() => {
+          expect(this.tempUser.email).to.equal(testUser.email);
+          done();
+        });
+      });
+      
+      it('Should create an ID', done => {
+        request.post(`${url}/api/signup`)
+        .send(testUser)
+        .end(() => {
+          expect(this.tempUser._id).to.exist;
           done();
         });
       });
     });
   });
 
-  describe('GET: /api/signin', function(){
+  describe('GET: /api/signin', () => {
 
-    describe('Testing the fetch account method', function(){
-      it('Should return a user when given a user id', done => {
-        // TODO:
+    describe('Testing the fetch account method', () => {
+
+      it('Should return a user when logging in', done => {
         request.get(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
+        .set({Authorization: `Basic ${this.tempToken}`})
+        .send({'username': `${this.tempUser.username}`, 'password': `${testUser.password}`})
+        .end(() => {
+          expect(this.tempUser.username).to.equal('christina');
           done();
         });
       });
 
       it('Should generate a new token', done => {
-        // TODO:
         request.get(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
+        .set({Authorization: `Basic ${this.tempToken}`})
+        .send({'username': `${this.tempUser.username}`, 'password': `${testUser.password}`})
+        .end(() => {
+          expect(this.tempToken).to.be.a('string');
           done();
         });
       });
@@ -345,13 +383,14 @@ describe('User integration tests', function() {
 
   }); // end get signin
 
-  describe('GET: /api/dashboard', function(){
+  describe('GET: /api/dashboard', () => {
 
     describe('Populate owned stories method', function(){
       it('Should return a user when given an id', done => {
-        // TODO:
         request.get(`${url}/api/dashboard`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
         .end((err, res) => {
+          console.log('res.body', res.body);
           expect(res.status).to.equal(404);
           done();
         });
@@ -390,7 +429,7 @@ describe('User integration tests', function() {
 
   }); // end get signin
 
-  describe('PUT: /api/follow/story/:storyId', function(){
+  describe('PUT: /api/follow/story/:storyId', () => {
 
     describe('Add to followed method', function(){
       it('Should take a user id into story id', done => {
@@ -443,7 +482,7 @@ describe('User integration tests', function() {
 
   }); // end get signin
 
-  describe('PUT: /api/logout/:userId', function(){
+  describe('PUT: /api/logout/:userId', () => {
 
     describe('Testing the logout method', function(){
       it('Should take in a user id', done => {

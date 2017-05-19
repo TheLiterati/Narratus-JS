@@ -386,7 +386,7 @@ describe('User integration tests', () => {
   describe('GET: /api/dashboard', () => {
 
     describe('Populate owned stories method', function(){
-      it.only('Should return a user when given an id', done => {
+      it('Should return a user when given an id', done => {
         request.get(`${url}/api/dashboard`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .end((err, res) => {

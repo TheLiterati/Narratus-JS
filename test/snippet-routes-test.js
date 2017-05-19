@@ -242,7 +242,7 @@ describe('Snippet routes', function () {
     });
 
     describe('a proper request with a valid body', () => {
-      it.only('should return a 200 response', done => {
+      it('should return a 200 response', done => {
         request.post(`${url}/api/snippet/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)

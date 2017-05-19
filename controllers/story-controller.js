@@ -53,7 +53,7 @@ exports.fetchStories = function() {
 exports.fetchStory = function(id) {
   debug('#fetchStory');
 
-  return Story.findOne(id).populate('snippets')
+  return Story.findOne({'_id':id}).populate('snippets')
   .then(story => {
     return Promise.resolve(story);
   })

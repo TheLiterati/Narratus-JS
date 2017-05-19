@@ -3,7 +3,7 @@
 const debug = require('debug')('narratus:user-routes');
 const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
-const userController = require('../controllers/user-controller');
+const authController = require('../controllers/user-controller');
 
 module.exports = function(router) {
 
@@ -14,28 +14,18 @@ module.exports = function(router) {
     req.body.password = null;
     delete req.body.password;
 
-    userController.createAccount(req.body, tempPassword)
+    authController.createAccount(req.body, tempPassword)
     .then(token => res.json(token))
-    // .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.mesage));
   });
 
   router.get('/signin', basicAuth, (req, res) => {
-    debug('#GET /signin');
+    debug('GET /signin');
 
-    userController.fetchAccount(req.auth, req.body)
+    authController.fetchAccount(req.auth)
     .then(token => res.json(token))
-    // .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.message));
   });
-
-  // router.get('/getuser', bearerAuth, (req, res) => {
-  //   debug('#GET /getuser');
-  //
-  //   userController.getUser(req.auth)
-  //   .then(user => res.json(user))
-  //   .catch(err => res.status(err.status).send(err.message));
-  // });
 
   router.get('/dashboard', bearerAuth, (req, res) => {
     debug('#GET /dashboard');
@@ -82,14 +72,6 @@ module.exports = function(router) {
     .then(story => res.json(story))
     .catch(err => res.status(err.status).send(err.message));
   });
-
-  router.put('/logout/:userId', bearerAuth, (req, res) => {
-    debug('#PUT /logout');
-
-    userController.logout(req.params.userId)
-    .then(token => res.json(token))
-    .catch(err => res.status(err.status).send(err.message));
-  });
-
+  
   return router;
 };

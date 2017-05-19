@@ -26,7 +26,6 @@ exports.createSnippet = function(storyId, snippet){
         return story.save()
         .then(() => newSnippet)
         .catch(err => Promise.reject(createError(400, err.message)));
-        // return newSnippet;
         
       }
     })

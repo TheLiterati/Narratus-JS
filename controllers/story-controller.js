@@ -8,15 +8,6 @@ const User = require('../models/user.js');
 
 module.exports = exports = {};
 
-// exports.createStory = function(story) {
-//   debug('#createStory');
-//   if(!story) return Promise.reject(createError(400, 'No story included.'));
-//
-//   return new Story(story).save()
-//   .then(story => story)
-//   .catch(() => Promise.reject(createError(400, 'You done goofed up the submission')));
-// };
-
 exports.createStory = function(userId, story, snippet){
   debug('#createStory');
   return User.findOne(userId)
@@ -50,29 +41,8 @@ exports.fetchStory = function(id) {
   debug('#fetchStory');
 
   return Story.findById({'_id':id}).populate('snippets')
-
   .then(story => {
     return Promise.resolve(story);
   })
   .catch(() => Promise.reject(createError(404, 'Story not found')));
 };
-
-// exports.updateStory = function(req) {  //NOTE: stretch
-//   if(!req.params.id) return Promise.reject(createError(400, 'Story ID required'));
-//
-//   if(!req.body.title || !req.body.description || !req.body.startSnippet) return Promise.reject(createError(400, 'Title, description, and starting snippet are required'));
-//
-//   return Story.findByIdAndUpdate(req.params.id, req.body, {new: true})
-//   .then(story => Promise.resolve(story))
-//   .catch(() => Promise.reject(createError(404, 'Story not found')));
-// };
-//
-// exports.deleteStory = function(storyId) {
-//   debug('#deleteStory');
-//
-//   console.log(storyId);
-//
-//   return Story.findByIdAndRemove(storyId)
-//   .then(story => Promise.resolve(story))
-//   .catch(err => Promise.reject(createError(404, 'Story  not found')));
-// };

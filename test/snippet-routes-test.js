@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const User = require('../models/user');
 const Story = require('../models/story');
-// const Snippet = require('../models/snippet');
-const snippetController = require('../controllers/snippet-controller.js');
 
 mongoose.Promise = Promise;
 
@@ -25,10 +23,9 @@ const exampleStory = {
   description: 'Project week - midterm project for JS backend and final project for iOS',
   startSnippet: 'There were seven of us assigned to a team. And then the murders began',
 };
-const exampleSnippet = {
-  snippetContent: 'And then the story continued with a user submitted snippet',
-};
-
+// const exampleSnippet = {
+//   snippetContent: 'And then the story continued with a user submitted snippet',
+// };
 
 describe('Snippet routes', function() {
   // POST: for snippet tests: 200, 400, 401, 404
@@ -253,7 +250,6 @@ describe('Snippet integration tests', () => {
     describe('The createSnippet method', () => {
 
       it('Should return a story with a story id passed in', done => {
-
         request.post(`${url}/api/snippet/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)
@@ -294,14 +290,13 @@ describe('Snippet integration tests', () => {
         });
       }); //end of it block;
 
-      it.only('Should have a new snippet in the story pendingSnippets array once added', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
+      it('Should have a new snippet in the story pendingSnippets array once added', done => {
+        request.post(`${url}/api/story/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)
-        .end((err, res) => {
-          console.log(res.text);
-          // console.log('the tempStory',this.tempStory);
-          // console.log('this pendingSnippets array', this.tempStory.pendingSnippets);
+        .end(() => {
+          console.log('the tempStory',this.tempStory);
+          console.log('this pendingSnippets array', this.tempStory.pendingSnippets);
           expect();
           done();
         });
@@ -377,7 +372,7 @@ describe('Snippet integration tests', () => {
     });
 
     describe('The approveSnippet method', () => {
-
+      
       it('Should return a story with a story id passed in', done => {
         request.post(`${url}/api/snippet/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
@@ -440,7 +435,10 @@ describe('Snippet integration tests', () => {
 
     }); //end of approveSnippet test
 
+  describe('POST /api/snippet/:storyId', function() {
 
-  }); //end of :/api/snippet/approve/:storyId method
+    }); //end of :/api/snippet/approve/:storyId method
 
-}); //end snippet integration test
+  });
+// End
+});

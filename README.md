@@ -33,6 +33,38 @@
 
 ## Database
 ### Schemas
+* User schema
+  * username
+  * email
+  * password
+  * owned stories
+  * followed stories
+  * snippets written
+  * findHash
+
+
+* Story schema
+  * user id
+  * title
+  * description
+  * start snippet
+  * created
+  * genre
+  * open
+  * last updated
+  * snippets
+  * snippet count
+  * pending snippets
+  * pending snippet count
+
+
+* Snippet schema
+  * user id
+  * snippet content
+  * created
+  * pending
+  * approved
+
 ### MongoDB
 
 ## Routes
@@ -49,15 +81,9 @@
 * get '/story'
 * get '/story/:storyId'
 
-Stretch goals:
-* put '/story/:storyId'
-* delete '/story/:storyId'
-
 ### Snippets
 * post '/snippet/:storyId'
 * post '/snippet/approve/:storyId'
-
-
 
 ## Middleware
 

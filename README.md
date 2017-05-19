@@ -24,7 +24,6 @@ With this RESTful API, users can sign-up and sign-in, read and subscribe to shor
 * Organization: https://github.com/TheLiterati
 * JS: https://github.com/TheLiterati/Narratus-JS
 * iOS: https://github.com/TheLiterati/Narratus-ios
-*
 ## Version
 * 1.0.0
 
@@ -62,36 +61,27 @@ With this RESTful API, users can sign-up and sign-in, read and subscribe to shor
   * lastViewDate
   * bookmark
 
-## Routes
-
+## Server Endpoints
 ### User
-* post '/signup'
-* get '/signin'
-* get '/dashboard'
-* put '/follow/story/:storyId'
-* put '/logout/:userId'
+POST: `api/signup`
+GET: `api/signin`
+GET: `api/snippetapproval/:storyId`
+PUT: `api/follow/story/:storyId`
 
 ### Story
-* post '/story'
-* get '/story'
-* get '/story/:storyId'
+POST: `api/story`
+GET: `api/story`
+GET: `api/story/:storyId`
 
 ### Snippets
-* post '/snippet/:storyId'
-* post '/snippet/approve/:storyId'
+POST: `api/snippet/:storyId`
+POST: `api/snippet/approve/:storyId`
 
-## Middleware
-
-## Testing
 ## Installation
-### NPM Packages
-### Dependencies
-## Application
 ## Resources
 * [MongoDB](https://docs.mongodb.com)
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/TheLiterati/Narratus-JS/blob/master/LICENSE) file for details.
 
 ## Acknowledgments

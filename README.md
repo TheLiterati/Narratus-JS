@@ -1,12 +1,11 @@
 # Narratus
 
-## Description
+## Overview
+Narrutus is a collaborative writing app that allows users to initiate a theme-based short story and for other users to contribute to the story sequentially.
 
-## Team Name
-* The Literati
+With this RESTful API, users can sign-up and sign-in, read and subscribe to short stories, create and moderate short stories, and contribute to other short stories. Users who do not sign-up with an account can only read stories.
 
-## Team Members
-
+## The Literati - Team Members:
 ### iOS
 * Christina Lee
 * Mike Miksch
@@ -19,53 +18,49 @@
 * Shelly Tang
 
 ## Sites
-### Deployed Website
-### App Store
-### iOS GitHub
-
+### Deployed API  
+* https://dashboard.heroku.com/apps/narratus-production
+### GitHub
+* Organization: https://github.com/TheLiterati
+* JS: https://github.com/TheLiterati/Narratus-JS
+* iOS: https://github.com/TheLiterati/Narratus-ios
+*
 ## Version
-* 0.1.0
+* 1.0.0
 
-## Architecture
-### Model
-### View
-### Controller
-
-## Database
-### Schemas
-* User schema
+## Schemas
+### User schema
   * username
   * email
   * password
-  * owned stories
-  * followed stories
-  * snippets written
+  * ownedStories
+  * followedStories
+  * snippetsWritten
   * findHash
 
-
-* Story schema
-  * user id
+### Story schema
+  * userId
   * title
   * description
-  * start snippet
+  * startSnippet
   * created
   * genre
   * open
-  * last updated
+  * lastUpdated
   * snippets
-  * snippet count
-  * pending snippets
-  * pending snippet count
+  * snippetCount
+  * pendingSnippets
+  * pendingSnippetCount
 
-
-* Snippet schema
-  * user id
-  * snippet content
+### Snippet schema
+  * userId
+  * snippetContent
   * created
   * pending
-  * approved
-
-### MongoDB
+  * accpeted
+  * acceptedDate
+  * lastViewDate
+  * bookmark
 
 ## Routes
 

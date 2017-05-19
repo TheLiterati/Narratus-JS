@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const User = require('../models/user');
 const Story = require('../models/story');
+const Snippet = require('../models/snippet');
 
 mongoose.Promise = Promise;
 
@@ -23,12 +24,38 @@ const exampleStory = {
   description: 'Project week - midterm project for JS backend and final project for iOS',
   startSnippet: 'There were seven of us assigned to a team. And then the murders began',
 };
-// const exampleSnippet = {
-//   snippetContent: 'And then the story continued with a user submitted snippet',
-// };
+const exampleSnippet = {
+  snippetContent: 'And then the story continued with a user submitted snippet',
+};
 
 describe('Snippet routes', function() {
   // POST: for snippet tests: 200, 400, 401, 404
+  describe('Testing snippet Schema', () => {
+    it('Should create a snippet when given the correct information', done => {
+      let req = {};
+      req.body = {snippetContent: 'And then the murders began'};
+      let user = new Snippet(req.body);
+      expect(user.snippetContent).to.equal('And then the murders began');
+      expect(user.userId).to.exist;
+      expect(user.pending).to.be.true;
+      expect(user.userId).to.be.a('array');
+      expect(user).to.be.a('object');
+      done();
+    });
+    
+    it('Should not create a story when given invalid information', done => {
+      let req = {};
+      req.body = {snippetContent: ''};
+      let user = new Snippet(req.body);
+      expect(user.snippetContent).to.not.equal('And then the murders began');
+      expect(user.userId).to.exist;
+      expect(user.pending).to.be.true;
+      expect(user.userId).to.be.a('array');
+      expect(user).to.be.a('object');
+      done();
+    });
+  });
+  
   describe('POST /api/snippet/:storyId', function() {
 
     beforeEach(done => {
@@ -435,9 +462,9 @@ describe('Snippet integration tests', () => {
 
     }); //end of approveSnippet test
 
-  describe('POST /api/snippet/:storyId', function() {
-
-    }); //end of :/api/snippet/approve/:storyId method
+    // describe('POST /api/snippet/:storyId', function() {
+    // 
+    // }); //end of :/api/snippet/approve/:storyId method
 
   });
 // End

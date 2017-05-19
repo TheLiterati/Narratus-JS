@@ -31,7 +31,36 @@ const exampleStory = {
 
 // *** STORY TESTS ***
 
-describe.only('Story integration tests', () =>  {
+describe('Story integration tests', () =>  {
+  
+  describe('Testing story Schema', () => {
+    it('Should create a story when given the correct information', done => {
+      let req = {};
+      req.body = {title: 'Are we done yet?', description: 'Will today ever end?', startSnippet: 'We are all so tired, can we sleep soon?'};
+      let user = new Story(req.body);
+      expect(user.title).to.equal('Are we done yet?');
+      expect(user.description).to.equal('Will today ever end?');
+      expect(user.startSnippet).to.equal('We are all so tired, can we sleep soon?');
+      expect(user.userId).to.exist;
+      expect(user.snippets).to.be.a('array');
+      expect(user).to.be.a('object');
+      done();
+    });
+    
+    it('Should not create a story when given invalid information', done => {
+      let req = {};
+      req.body = {title: '', description: '', startSnippet: ''};
+      let user = new Story(req.body);
+      expect(user.title).to.not.equal('Are we done yet?');
+      expect(user.description).to.not.equal('Will today ever end?');
+      expect(user.startSnippet).to.not.equal('We are all so tired, can we sleep soon?');
+      expect(user.userId).to.exist;
+      expect(user.snippets).to.be.a('array');
+      expect(user).to.be.a('object');
+      done();
+    });
+  });
+  
   
   beforeEach(done => {
     new User(exampleUser)

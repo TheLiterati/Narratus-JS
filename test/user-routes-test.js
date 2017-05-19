@@ -20,25 +20,40 @@ const testUser = {
   username: 'christina',
   password: 'thebestpasswordever',
   email: 'christina@narratus.io',
-  // ownedStories: ['ownedId1', 'ownedId2'],
-  // 'followedId1', 'followedId2'
   followedStories: [],
 };
-// const testUser2 = {
-//   username: 'michael',
-//   password: 'thesecondbestpasswordever',
-//   email: 'mp@narratus.io',
-//   // ownedStories: ['ownedId1', 'ownedId2'],
-//   // 'followedId1', 'followedId2'
-//   followedStories: [],
-// };
-// const testStory = {
-//   title: 'test title',
-//   description: 'test description',
-//   startSnippet: 'this is the first snippet of the test story',
-// };????
 
 describe('User routes', function() {
+
+  describe('Testing user Schema', () => {
+    it('Should create a user when given the correct information', done => {
+      let req = {};
+      req.body = {username: 'Scott', password: 'secret', email: 'scott@codefellows.org'};
+      let user = new User(req.body);
+      expect(user.username).to.equal('Scott');
+      expect(user.password).to.equal('secret');
+      expect(user.email).to.equal('scott@codefellows.org');
+      expect(user.ownedStories).to.be.a('array');
+      expect(user.followedStories).to.be.a('array');
+      expect(user.snippetsWritten).to.be.a('array');
+      expect(user).to.be.a('object');
+      done();
+    });
+    
+    it('Should not create a user when given invalid information', done => {
+      let req = {};
+      req.body = {username: '', password: '', email: ''};
+      let user = new User(req.body);
+      expect(user.username).to.not.equal('Scott');
+      expect(user.password).to.not.equal('secret');
+      expect(user.email).to.not.equal('scott@codefellows.org');
+      expect(user.ownedStories).to.be.a('array');
+      expect(user.followedStories).to.be.a('array');
+      expect(user.snippetsWritten).to.be.a('array');
+      expect(user).to.be.a('object');
+      done();
+    });
+  });
 
   // *** USER AUTHENTICATION ***
 
@@ -89,19 +104,6 @@ describe('User routes', function() {
         .send('badrequest')
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    // 401 (unauthorized with invalid username/password)
-    describe('user submitted invalid username or password', function(){
-      it('should respond with a 401 unauthorized error', done => {
-        // TODO:
-        request.post(`${url}/api/signup`)
-        .send('')
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
           done();
         });
       });
@@ -295,40 +297,5 @@ describe('User integration tests', () => {
     }); // testing the create
 
   }); // end get signin
-
-
-  describe('PUT: /api/logout/:userId', () => {
-
-    describe('Testing the logout method', function(){
-      it('Should take in a user id', done => {
-        // TODO:
-        request.put(`${url}/api/logout/:userId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should return a user when given an id', done => {
-        // TODO:
-        request.put(`${url}/api/logout/:userId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-      it('Should reset token to an empty string', done => {
-        // TODO:
-        request.put(`${url}/api/logout/:userId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-
-    }); // end describe testing create
-
-  }); // end of put logout
 
 }); // end integration tests

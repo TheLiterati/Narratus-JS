@@ -27,6 +27,7 @@ exports.createSnippet = function(storyId, snippet){
         .then(() => newSnippet)
         .catch(err => Promise.reject(createError(400, err.message)));
         // return newSnippet;
+
       }
     })
     .then(newSnippet => Promise.resolve(newSnippet))

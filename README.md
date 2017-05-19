@@ -1,7 +1,22 @@
 # Narratus
 
 ## Description
+
+## Team Name
+* The Literati
+
 ## Team Members
+
+### iOS
+* Christina Lee
+* Mike Miksch
+* Serg Tsogtbaatar
+
+### JavaScript
+* Allie Grampa
+* Caleb Wells
+* Michael Padget
+* Shelly Tang
 
 ## Sites
 ### Deployed Website
@@ -18,23 +33,57 @@
 
 ## Database
 ### Schemas
+* User schema
+  * username
+  * email
+  * password
+  * owned stories
+  * followed stories
+  * snippets written
+  * findHash
+
+
+* Story schema
+  * user id
+  * title
+  * description
+  * start snippet
+  * created
+  * genre
+  * open
+  * last updated
+  * snippets
+  * snippet count
+  * pending snippets
+  * pending snippet count
+
+
+* Snippet schema
+  * user id
+  * snippet content
+  * created
+  * pending
+  * approved
+
 ### MongoDB
 
 ## Routes
+
 ### User
-* Get
-* Post
-* Put
+* post '/signup'
+* get '/signin'
+* get '/dashboard'
+* put '/follow/story/:storyId'
+* put '/logout/:userId'
+
 ### Story
-* Get
-* Post
-* Put
-* Delete
+* post '/story'
+* get '/story'
+* get '/story/:storyId'
+
 ### Snippets
-* Get
-* Post
-* Put
-* Delete
+* post '/snippet/:storyId'
+* post '/snippet/approve/:storyId'
 
 ## Middleware
 

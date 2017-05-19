@@ -25,7 +25,7 @@ module.exports = function(router) {
     .catch(err => res.status(err.status).send(err.message));
   });
 
-  router.get('/story/:storyId', bearerAuth, (req, res) => {
+  router.get('/story/:storyId', (req, res) => {
     debug('#GET /api/story/:storyId');
     storyController.fetchStory(req.params.storyId)
     .then(story => res.json(story))

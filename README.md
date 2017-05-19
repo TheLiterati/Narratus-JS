@@ -36,20 +36,28 @@
 ### MongoDB
 
 ## Routes
+
 ### User
-* Get
-* Post
-* Put
+* post '/signup'
+* get '/signin'
+* get '/dashboard'
+* put '/follow/story/:storyId'
+* put '/logout/:userId'
+
 ### Story
-* Get
-* Post
-* Put
-* Delete
+* post '/story'
+* get '/story'
+* get '/story/:storyId'
+
+Stretch goals:
+* put '/story/:storyId'
+* delete '/story/:storyId'
+
 ### Snippets
-* Get
-* Post
-* Put
-* Delete
+* post '/snippet/:storyId'
+* post '/snippet/approve/:storyId'
+
+
 
 ## Middleware
 

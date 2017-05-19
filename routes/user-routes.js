@@ -25,7 +25,7 @@ module.exports = function(router) {
 
     userController.fetchAccount(req.auth, req.body)
     .then(token => res.json(token))
-    .then(user => res.json(user))
+    // .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.message));
   });
 
@@ -41,7 +41,7 @@ module.exports = function(router) {
     debug('#GET /dashboard');
 
     let dashboardStories = {};
-    
+
     userController.populateOwnedStories(req.user._id)
     .then(ownedStories => dashboardStories.ownedStories = ownedStories.ownedStories)
     .then(()=> {

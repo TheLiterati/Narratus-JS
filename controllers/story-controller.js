@@ -29,19 +29,10 @@ exports.createStory = function(userId, story, snippet){
       user.save()
       .then(() => newStory)
       .catch(err => Promise.reject(createError(400, err.message)));
-    })
 
-    // .then(newStory => newStory.snippets.push(snippet))
-    .then(newStory => {
-      console.log('made it');
-      newStory.addStartSnippet(snippet);
-      newStory.save()
-      .then(() => newStory)
-      .catch(err => Promise.reject(createError(400, err.message)));
     })
-
     .then(newStory => Promise.resolve(newStory))
-    .catch(() => Promise.reject(createError(400, 'Error in create story')));
+    .catch(err => Promise.reject(createError(400, err.message)));
   });
 };
 
@@ -58,29 +49,31 @@ exports.fetchStories = function() {
 exports.fetchStory = function(id) {
   debug('#fetchStory');
 
-  return Story.findOne({'_id':id}).populate('snippets')
+
+  return Story.findById({'_id':id}).populate('pendingSnippets')
+
   .then(story => {
     return Promise.resolve(story);
   })
   .catch(() => Promise.reject(createError(404, 'Story not found')));
 };
 
-exports.updateStory = function(req) {  //NOTE: stretch
-  if(!req.params.id) return Promise.reject(createError(400, 'Story ID required'));
-
-  if(!req.body.title || !req.body.description || !req.body.startSnippet) return Promise.reject(createError(400, 'Title, description, and starting snippet are required'));
-
-  return Story.findByIdAndUpdate(req.params.id, req.body, {new: true})
-  .then(story => Promise.resolve(story))
-  .catch(() => Promise.reject(createError(404, 'Story not found')));
-};
-
-exports.deleteStory = function(storyId) {
-  debug('#deleteStory');
-
-  console.log(storyId);
-
-  return Story.findByIdAndRemove(storyId)
-  .then(story => Promise.resolve(story))
-  .catch(err => Promise.reject(createError(404, 'Story  not found')));
-};
+// exports.updateStory = function(req) {  //NOTE: stretch
+//   if(!req.params.id) return Promise.reject(createError(400, 'Story ID required'));
+//
+//   if(!req.body.title || !req.body.description || !req.body.startSnippet) return Promise.reject(createError(400, 'Title, description, and starting snippet are required'));
+//
+//   return Story.findByIdAndUpdate(req.params.id, req.body, {new: true})
+//   .then(story => Promise.resolve(story))
+//   .catch(() => Promise.reject(createError(404, 'Story not found')));
+// };
+//
+// exports.deleteStory = function(storyId) {
+//   debug('#deleteStory');
+//
+//   console.log(storyId);
+//
+//   return Story.findByIdAndRemove(storyId)
+//   .then(story => Promise.resolve(story))
+//   .catch(err => Promise.reject(createError(404, 'Story  not found')));
+// };

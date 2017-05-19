@@ -24,9 +24,12 @@ module.exports = function(router){
     req.body.userId = req.user._id;
     snippetController.approveSnippet(req.params.storyId, req.body)
     .then(snippet => {
+      // console.log(req.body.snippetContent);
+      // console.log('this is our snippet on heroin:', req.body.snippetContent);
+      // console.log(JSON.stringify(snippet.snippetContent));
       res.json(snippet);
     })
-    .catch(err => res.status(err.status).send(err.message));
+    .catch(err => res.status(404).send(err.message));
   });
   return router;
 };

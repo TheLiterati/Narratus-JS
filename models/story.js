@@ -15,15 +15,15 @@ const storySchema = Schema({
   genre: {type: String, default: 'Fiction', require: true},
   open: {type: Boolean, default: true, required:true},
   lastUpdated: {type: Date}, //NOTE stretch
-  snippets: [{type: String}],
-  snippetCount: {type: Number, default: 0},
+  snippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
   pendingSnippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
+  snippetCount: {type: Number, default: 0},
   pendingSnippetCount: {type: Number, default: 0},
 });
 
 storySchema.methods.addStartSnippet = function(snippet) {
   debug('#addStartSnippet');
-  
+
   return new Promise((resolve, reject) => {
     if(!snippet) return reject(createError(401, 'Story push failed'));
     let newSnippet = new Snippet();

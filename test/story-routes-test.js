@@ -31,155 +31,6 @@ const exampleStory = {
 
 // *** STORY TESTS ***
 
-describe('Story routes', () =>  {
-
-  // Setup and teardown
-  beforeEach(done => {
-    new User(exampleUser)
-    .generatePasswordHash(exampleUser.password)
-    .then(user => user.save())
-    .then(user => {
-      this.tempUser = user;
-      return user.generateToken();
-    })
-    .then(token => {
-      this.tempToken = token;
-      done();
-    })
-    .catch(() => done());
-  });
-  afterEach(done => {
-    Promise.all([
-      User.remove({}),
-      Story.remove({}),
-    ])
-    .then(() => done())
-    .catch(() => done());
-  });
-
-  // POST: for story tests: 200, 400, 401
-  describe('POST: /api/story', () => {
-
-
-    // 400 (bad request with invalid body)
-    describe('bad request TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    // 401 (unauthorized with invalid username/password)
-    describe('unauthorized TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-      });
-    });
-
-  });
-
-  // GET: for story tests: 200, 401, 404
-  describe('GET: /api/story', () => {
-
-
-
-    // 401 (unauthorized with invalid username/password)
-    describe('unauthorized TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-      });
-    });
-
-    // 404 (bad request, not found)
-    describe('bad request TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    });
-  });
-
-  // TODO: Story GET: /api/story/:storyId
-
-  // PUT: for story tests: 200, 400, 401, 404
-  describe('PUT: /api/story', () => {
-
-
-
-    // 400 (bad request with invalid body)
-    describe('bad request TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api//:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    // 401 (unauthorized with invalid username/password)
-    describe('unauthorized TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-      });
-    });
-
-    // 404 (bad request, not found)
-    describe('bad request TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    });
-
-  });
-
-  // DELETE: for story tests: 204
-  describe('DELETE: /api/story', () => {
-
-    // 204 (no content)
-    describe('no content TBD', () => {
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/story`)
-        .end((err, res) => {
-          expect(res.status).to.equal(204);
-          done();
-        });
-      });
-    });
-  });
-// End
-});
-
 describe.only('Story integration tests', () =>  {
   
   beforeEach(done => {
@@ -264,21 +115,10 @@ describe.only('Story integration tests', () =>  {
         });
       });
       
-      // NOT WORKING YET, OWNED STORIES ARRAY IS EMPTY
-      it.only('Should push the new story into the owner\'s ownedStories array', done => {
+      it('Should push the new story into the owner\'s ownedStories array', done => {
         request.post(`${url}/api/story`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleStory)
-        // .then(data => {
-        //   this.tempUser.save();
-        //   User.findById(this.tempUser._id)
-        //   .then( user => {
-        //     
-        //     // console.log('this.tempstory', this.tempStory);
-        //     console.log('user', user);
-        //     done();
-        //   })
-        // });
         .end((err, res) => {
           console.log(err);
           expect(res.status).to.equal(200);
@@ -307,8 +147,26 @@ describe.only('Story integration tests', () =>  {
         });
       });
       
+      it('Should return a 401 error on a bad token request', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: 'Bad token'})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+      
+      it('should respond with a 404 error not found', done => {
+        request.post(`${url}/api/story/story1234`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
     });  //create story
-    
   });// POST
   
   describe('GET: /api/story', () =>  {
@@ -327,8 +185,16 @@ describe.only('Story integration tests', () =>  {
         });
       });
       
+      it('should respond with a 404 error not found', done => {
+        request.get(`${url}/api/story/story1234`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
     }); //fetch story
-    
   }); // GET
   
   describe('GET: /story/:storyId', () =>  {
@@ -357,78 +223,15 @@ describe.only('Story integration tests', () =>  {
         });
       });
       
+      it('should respond with a 404 error not found', done => {
+        request.get(`${url}/api/story/story1234`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
     }); //fetch stories
-    
   }); // GET
-  
-//   describe('PUT: /story/:storyId', () =>  {
-//     
-//     describe('Testing the update story method', () =>  {
-//       
-//       it('Should take in username, password, and email', done => {
-//         // TODO:
-//         request.put(`${url}/api/signup`)
-//         .end((err, res) => {
-//           expect(res.status).to.equal(404);
-//           done();
-//         });
-//       });
-//       
-//       it('Should take in username, password, and email', done => {
-//         // TODO:
-//         request.put(`${url}/api/signup`)
-//         .end((err, res) => {
-//           expect(res.status).to.equal(404);
-//           done();
-//         });
-//       });
-//       
-//       it('Should take in username, password, and email', done => {
-//         // TODO:
-//         request.put(`${url}/api/signup`)
-//         .end((err, res) => {
-//           expect(res.status).to.equal(404);
-//           done();
-//         });
-//       });
-//       
-//       it('Should take in username, password, and email', done => {
-//         // TODO:
-//         request.put(`${url}/api/signup`)
-//         .end((err, res) => {
-//           expect(res.status).to.equal(404);
-//           done();
-//         });
-//       });
-//       
-//     }); // update story
-//     
-//   }); // PUT
-//   
-//   describe('DELETE: /story/:storyId', () =>  {
-//     
-//     describe('Testing the delete story method', () =>  {
-//       
-//       it('Should return a story when given an id', done => {
-//         // TODO:
-//         request.delete(`${url}/api/signup`)
-//         .end((err, res) => {
-//           expect(res.status).to.equal(404);
-//           done();
-//         });
-//       });
-//       
-//       it('Should remove the story from the database', done => {
-//         // TODO:
-//         request.delete(`${url}/api/signup`)
-//         .end((err, res) => {
-//           expect(res.status).to.equal(404);
-//           done();
-//         });
-//       });
-//       
-//     }); // delete story
-//     
-//   }); // DELETE
-//   
-}); //end story integration tests
+});

@@ -265,13 +265,22 @@ describe.only('Story integration tests', () =>  {
       });
       
       // NOT WORKING YET, OWNED STORIES ARRAY IS EMPTY
-      it('Should push the new story into the owner\'s ownedStories array', done => {
+      it.only('Should push the new story into the owner\'s ownedStories array', done => {
         request.post(`${url}/api/story`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleStory)
+        // .then(data => {
+        //   this.tempUser.save();
+        //   User.findById(this.tempUser._id)
+        //   .then( user => {
+        //     
+        //     // console.log('this.tempstory', this.tempStory);
+        //     console.log('user', user);
+        //     done();
+        //   })
+        // });
         .end((err, res) => {
-          console.log('this.tempuser', this.tempUser);
-          console.log('this.tempstory', this.tempStory);
+          console.log(err);
           expect(res.status).to.equal(200);
           expect(this.tempUser.ownedStories).to.be.a('array');
           done();

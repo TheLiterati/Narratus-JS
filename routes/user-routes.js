@@ -3,7 +3,7 @@
 const debug = require('debug')('narratus:user-routes');
 const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
-const authController = require('../controllers/user-controller');
+const userController = require('../controllers/user-controller');
 
 module.exports = function(router) {
 
@@ -14,7 +14,7 @@ module.exports = function(router) {
     req.body.password = null;
     delete req.body.password;
 
-    authController.createAccount(req.body, tempPassword)
+    userController.createAccount(req.body, tempPassword)
     .then(token => res.json(token))
     .catch(err => res.status(err.status).send(err.mesage));
   });
@@ -22,7 +22,7 @@ module.exports = function(router) {
   router.get('/signin', basicAuth, (req, res) => {
     debug('GET /signin');
 
-    authController.fetchAccount(req.auth)
+    userController.fetchAccount(req.auth)
     .then(token => res.json(token))
     .catch(err => res.status(err.status).send(err.message));
   });

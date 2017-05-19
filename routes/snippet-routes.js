@@ -8,6 +8,7 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 module.exports = function(router){
 
+  // these routes should be structured something like `/story/:storyId/snippet`
   router.post('/snippet/:storyId', bearerAuth, (req, res) => {
     debug('#POST /snippet/:storyId');
 

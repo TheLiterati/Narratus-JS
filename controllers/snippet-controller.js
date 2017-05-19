@@ -21,9 +21,9 @@ exports.createSnippet = function(storyId, snippet){
       if (story.pendingSnippetCount < 10) {
         story.pendingSnippets.push(newSnippet);
         story.pendingSnippetCount++;
-        // console.log('pending count in if conditional', story.pendingSnippetCount);
-        story.save();
-        return newSnippet;
+        story.save()
+        .then(() => newSnippet)
+        .catch(err => Promise.reject(createError(400, err.message)));
       }
     })
     .then(newSnippet => Promise.resolve(newSnippet))

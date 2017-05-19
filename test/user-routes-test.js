@@ -24,13 +24,6 @@ const testUser = {
   // 'followedId1', 'followedId2'
   followedStories: [],
 };
-
-// const testUser2 = {
-//   username: 'michael',
-//   password: 'bestpassword',
-//   email: 'michael@narratus.io',
-// };
-
 // const testUser2 = {
 //   username: 'michael',
 //   password: 'thesecondbestpasswordever',
@@ -62,7 +55,13 @@ describe('User routes', function() {
         });
       });
     });
-  // End GET
+
+    // NOTE: this may or may not be needed here
+    after(done => {
+      User.remove({})
+      .then(done())
+      .catch();
+    });
   });
 
   // *** USER TESTS ***
@@ -71,8 +70,8 @@ describe('User routes', function() {
   describe('POST: /api/signup', function(){
 
     // 200 (proper request with valid body, returns a token)
-    describe('User filled out form data correctly', function(){
-      it('Should return a token', done => {
+    describe('user filled out form data correctly', function(){
+      it('should return a token', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
         .end((err, res) => {
@@ -84,23 +83,10 @@ describe('User routes', function() {
     });
 
     // 400 (bad request with invalid body)
-    describe('User entered no form data', function(){
-      it('Should respond with a 400 bad request error', done => {
+    describe('user entered missing or incorrect form data', function(){
+      it('should respond with a 400 bad request error', done => {
         request.post(`${url}/api/signup`)
-        .send({ username: '' })
-        .send({ password: '' })
-        .send({ email: '' })
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    describe('User already exists', function(){
-      it('Should respond with a 400 bad request error', done => {
-        request.post(`${url}/api/signup`)
-        .send(testUser)
+        .send('badrequest')
         .end((err, res) => {
           expect(res.status).to.equal(400);
           done();
@@ -109,9 +95,19 @@ describe('User routes', function() {
     });
 
     // 401 (unauthorized with invalid username/password)
-    // NOTE: Cannot post unauthorized user because it doesn't yet exist.
+    describe('user submitted invalid username or password', function(){
+      it('should respond with a 401 unauthorized error', done => {
+        // TODO:
+        request.post(`${url}/api/signup`)
+        .send('')
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+    });
 
-    // NOTE: Removing this will result in "Unhandled rejection MongoError"
+    // NOTE: this may or may not be needed here
     after(done => {
       User.remove({})
       .then(done())
@@ -139,8 +135,8 @@ describe('User routes', function() {
     });
 
     // 200 (proper request with valid body, returns a token)
-    describe('User logged in with correct credentials', function() {
-      it('Should respond with 200 ok status and token', done => {
+    describe('user logged in with correct credentials', function() {
+      it('should respond with 200 ok status and token', done => {
         request.get(`${url}/api/signin`)
         .auth('christina', 'thebestpasswordever')
         .end((err, res) => {
@@ -152,24 +148,23 @@ describe('User routes', function() {
     });
 
     // 401 (unauthorized with invalid username/password)
-    describe('User entered incorrect login information', function(){
-      it('Should repond with a 401 unauthorized error', done => {
+    describe('user entered incorrect login information', function(){
+      it('should repond with a 401 unauthorized error', done => {
         request.get(`${url}/api/signin`)
-        .auth('wrong-user', 'wrong-password')
+        .auth('wronguser', 'wrongpassword')
         .end((err, res) => {
           expect(res.status).to.equal(401);
           done();
         });
       });
     });
-  // End GET
   });
 
   // GET: for user tests: 404
   describe('GET: /api/signin', function() {
     // 404 (bad request, not found)
-    describe('User put in a bad url path', function() {
-      it('Return a bad request 404 not found', done => {
+    describe('user put in a bad url path', function() {
+      it('return a bad request 404 not found', done => {
         request.get(`${url}/api/badrequest`)
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -185,7 +180,7 @@ describe('User routes', function() {
       .catch();
     });
   });
-// End
+// End  
 });
 
 describe('User integration tests', () => {

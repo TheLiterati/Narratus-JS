@@ -4,7 +4,6 @@ const debug = require('debug')('narratus:story-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
 const Story = require('../models/story.js');
-const User = require('../models/user.js');
 
 module.exports = exports = {};
 
@@ -41,7 +40,6 @@ exports.fetchStory = function(id) {
   debug('#fetchStory');
 
   return Story.findById({'_id':id}).populate('snippets')
-
   .then(story => {
     return Promise.resolve(story);
   })

@@ -4,16 +4,14 @@ const debug = require('debug')('narratus:snippet-controller.js');
 const Promise = require('bluebird');
 const createError = require('http-errors');
 const Snippet = require('../models/snippet.js');
+const storyController = require('../controllers/story-controller.js');
 const Story = require('../models/story.js');
 
 module.exports = exports = {};
 
 exports.createSnippet = function(storyId, snippet){
   debug('#createSnippet');
-
-  if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
-  if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
-
+  console.log('Snippet Body: \n', snippet);
   return Story.findById(storyId)
   .then(story => {
     new Snippet(snippet).save()
@@ -28,16 +26,13 @@ exports.createSnippet = function(storyId, snippet){
       }
     })
     .then(newSnippet => Promise.resolve(newSnippet))
-    .catch(err => Promise.reject(createError(400, err.message)));
-  })
-  .catch(err => Promise.reject(createError(404, err.message)));
+    .catch(err => Promise.reject(err));
+  });
 };
 
 exports.approveSnippet = function(storyId, snippet){
-  debug('#approveSnippet');
-
-  if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
-  if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
+  debug('#createSnippet');
+  console.log('Snippet Body: \n', snippet);
 
 
   return Story.findById(storyId)
@@ -51,7 +46,6 @@ exports.approveSnippet = function(storyId, snippet){
       story.save()
       .then(() => Promise.resolve(newSnippet))
       .catch(err => Promise.reject(createError(400, err.message)));
-
     })
     .then(newSnippet => Promise.resolve(newSnippet))
     .catch(err => Promise.reject(createError(400, err.message)));

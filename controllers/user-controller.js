@@ -22,30 +22,14 @@ exports.createAccount = function(user, password) {
   .catch(() => Promise.reject(createError(400, 'Bad request')));
 };
 
-exports.fetchAccount = function(checkUser, user) {
+exports.fetchAccount = function(checkUser) {
   debug('#fetchAccount');
   return User.findOne({username: checkUser.username})
   .then(user => user.comparePasswordHash(checkUser.password))
   .then(user => user.generateToken())
-  .then(user => user)
   .then(token => token)
   .catch(() => Promise.reject(createError(401, 'Not authorized')));
-
-};
-
-exports.populateOwnedStories = function(userId){
-  debug('#populateOwnedStories');
-  return User.findById(userId).populate('ownedStories')
-  .then(user => user)
-  .catch(err => Promise.reject(createError(404, err.message)));
-};
-
-exports.populateFollowedStories = function(userId){
-  debug('#populateFollowedStories');
-
-  return User.findById(userId).populate('followedStories')
-  .then(user => user)
-  .catch(err => Promise.reject(createError(404, err.message)));
+  
 };
 
 exports.populateApprovedSnippets = function(storyId){
@@ -65,27 +49,15 @@ exports.populatePendingSnippets = function(storyId){
 
 exports.addToFollowed = function(userId, storyId) {
   debug('#addToFollowed');
-
-  if(!userId) return Promise.reject(createError(400, 'User ID required'));
+  
+  if(!userId) return Promise.reject(createError(400, 'Story ID required'));
   if(!storyId) return Promise.reject(createError(400, 'Story ID required'));
-  return User.findById(userId)
+  
+  return User.findOne(userId)
   .then(user => {
-    return Story.findById(storyId)
-    .then(story => {
-      console.log(story);
-      console.log('user', user);
-      user.followedStories.push(story);
-      user.save();
-    })
+    return Story.findOne(storyId)
+    .then(() => user.followedStories.push(storyId))
     .catch(() => Promise.reject(createError(400, 'Bad request')));
   });
 };
 
-exports.logout = function(userId) {
-  debug('#logout');
-
-  if(!userId) return Promise.reject(createError(400, 'User ID required'));
-  return User.findById(userId)
-  .then(user => user.clearToken())
-  .catch(() => Promise.reject(createError(400, 'Unable to clear token')));
-};

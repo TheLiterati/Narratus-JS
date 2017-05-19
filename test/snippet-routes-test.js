@@ -23,10 +23,9 @@ const exampleStory = {
   description: 'Project week - midterm project for JS backend and final project for iOS',
   startSnippet: 'There were seven of us assigned to a team. And then the murders began',
 };
-const exampleSnippet = {
-  snippetContent: 'And then the story continued with a user submitted snippet',
-};
-
+// const exampleSnippet = {
+//   snippetContent: 'And then the story continued with a user submitted snippet',
+// };
 
 describe('Snippet routes', function() {
   // POST: for snippet tests: 200, 400, 401, 404
@@ -373,7 +372,7 @@ describe('Snippet integration tests', () => {
     });
 
     describe('The approveSnippet method', () => {
-
+      
       it('Should return a story with a story id passed in', done => {
         request.post(`${url}/api/snippet/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
@@ -436,7 +435,10 @@ describe('Snippet integration tests', () => {
 
     }); //end of approveSnippet test
 
+  describe('POST /api/snippet/:storyId', function() {
 
-  }); //end of :/api/snippet/approve/:storyId method
+    }); //end of :/api/snippet/approve/:storyId method
 
-}); //end snippet integration test
+  });
+// End
+});

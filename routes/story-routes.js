@@ -10,14 +10,14 @@ module.exports = function(router) {
     debug('#POST /api/story');
 
     req.body.userId = req.user._id;
-    return storyController.createStory(req.params.userId, req.body, req.body.startSnippet)
+    return storyController.createStory(req.body)
     .then(story => {
       res.json(story);
     })
     .catch(() => res.send(createError(400, 'nope')));
   });
 
-  router.get('/story', (req, res) => {
+  router.get('/story', bearerAuth, (req, res) => {
     debug('#GET /api/story');
     storyController.fetchStories(req)
     .then(story => res.json(story))

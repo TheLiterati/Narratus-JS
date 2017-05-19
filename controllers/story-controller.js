@@ -4,6 +4,7 @@ const debug = require('debug')('narratus:story-controller');
 const Promise = require('bluebird');
 const createError = require('http-errors');
 const Story = require('../models/story.js');
+const User = require('../models/user.js');
 
 module.exports = exports = {};
 
@@ -12,16 +13,16 @@ exports.createStory = function(userId, story, snippet){
   return User.findOne(userId)
   .then(user => {
 
-    new Story(story).save()
+    return new Story(story).save()
 
     .then(newStory => {
       user.ownedStories.push(newStory);
-      user.save()
+      return user.save()
       .then(() => newStory)
       .catch(err => Promise.reject(createError(400, err.message)));
 
     })
-    .then(newStory => Promise.resolve(newStory))
+    .then(newStory => newStory)
     .catch(err => Promise.reject(createError(400, err.message)));
   });
 };

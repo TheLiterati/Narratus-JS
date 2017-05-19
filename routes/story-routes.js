@@ -12,7 +12,6 @@ module.exports = function(router) {
     req.body.userId = req.user._id;
     return storyController.createStory(req.params.userId, req.body, req.body.startSnippet)
     .then(story => {
-      console.log(req.body);
       res.json(story);
     })
     .catch(() => res.send(createError(400, 'nope')));
@@ -29,20 +28,6 @@ module.exports = function(router) {
     debug('#GET /api/story/:storyId');
     storyController.fetchStory(req.params.storyId)
     .then(story => res.json(story))
-    .catch(err => res.status(err.status).send(err.message));
-  });
-
-  router.put('/story/:storyId', bearerAuth, (req, res) => {  //NOTE: stretch
-    debug('#PUT /api/story/:storyId');
-    storyController.updateStory(req)
-    .then(story => res.json(story))
-    .catch(err => res.status(err.status).send(err.message));
-  });
-
-  router.delete('/story/:storyId', bearerAuth, (req, res) => {
-    debug('#DELETE /api/story/:storyId');
-    storyController.deleteStory(req.params.storyId, req.user._id)
-    .then(err => res.status(204).send(err.message))
     .catch(err => res.status(err.status).send(err.message));
   });
 

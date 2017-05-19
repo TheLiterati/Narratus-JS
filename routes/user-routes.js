@@ -2,6 +2,7 @@
 
 const debug = require('debug')('narratus:user-routes');
 const basicAuth = require('../lib/basic-auth-middleware');
+const bearerAuth = require('../lib/bearer-auth-middleware');
 const authController = require('../controllers/user-controller');
 
 module.exports = function(router) {

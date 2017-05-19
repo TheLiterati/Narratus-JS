@@ -16,7 +16,6 @@ module.exports = function(router) {
 
     userController.createAccount(req.body, tempPassword)
     .then(token => res.json(token))
-    // .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.mesage));
   });
 
@@ -25,17 +24,8 @@ module.exports = function(router) {
 
     userController.fetchAccount(req.auth, req.body)
     .then(token => res.json(token))
-    .then(user => res.json(user))
     .catch(err => res.status(err.status).send(err.message));
   });
-
-  // router.get('/getuser', bearerAuth, (req, res) => {
-  //   debug('#GET /getuser');
-  //
-  //   userController.getUser(req.auth)
-  //   .then(user => res.json(user))
-  //   .catch(err => res.status(err.status).send(err.message));
-  // });
 
   router.get('/dashboard', bearerAuth, (req, res) => {
     debug('#GET /dashboard');

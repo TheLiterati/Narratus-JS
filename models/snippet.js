@@ -14,4 +14,5 @@ const snippetSchema = Schema({
   bookmark: {type: Boolean}, //NOTE stretch
 });
 
+
 module.exports = mongoose.model('snippet', snippetSchema);

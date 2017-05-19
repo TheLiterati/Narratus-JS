@@ -14,14 +14,16 @@ exports.createSnippet = function(storyId, snippet){
   console.log('Snippet Body: \n', snippet);
   return Story.findById(storyId)
   .then(story => {
-    console.log('StoryId.snippets: \n', story.pendingSnippets);
-    return new Snippet(snippet).save()
+    new Snippet(snippet).save()
     .then(newSnippet => {
-      console.log('Pre-pushed snippet: \n', newSnippet);
-      story.pendingSnippets.push(newSnippet);
-      story.save();
-      console.log('Story\'s snippet array: \n', story.pendingSnippets);
-      return newSnippet;
+      if (story.pendingSnippetCount < 10) {
+        story.pendingSnippets.push(newSnippet);
+        story.pendingSnippetCount +=1;
+        story.save()
+        .then(() => newSnippet)
+        .catch(err => Promise.reject(createError(400, err.message)));
+
+      }
     })
     .then(newSnippet => Promise.resolve(newSnippet))
     .catch(err => Promise.reject(err));
@@ -32,44 +34,22 @@ exports.approveSnippet = function(storyId, snippet){
   debug('#createSnippet');
   console.log('Snippet Body: \n', snippet);
 
+
   return Story.findById(storyId)
   .then(story => {
-    console.log('StoryId.snippets: \n', story.snippets);
     return new Snippet(snippet).save()
-    .then(approvedSnippet => {
-      console.log('Pre-pushed snippet: \n', approvedSnippet);
-      story.snippets.push(approvedSnippet);
+    .then(newSnippet => {
+      story.snippets.push(newSnippet);
+      story.snippetCount +=1;
       story.pendingSnippets = [];
-      story.save();
-      console.log('Story\'s snippet array: \n', story.snippets);
-      return approvedSnippet;
+      story.pendingSnippetCount = 0;
+      story.save()
+      .then(() => Promise.resolve(newSnippet))
+      .catch(err => Promise.reject(createError(400, err.message)));
     })
-    .then(approvedSnippet => Promise.resolve(approvedSnippet))
-    .catch(err => Promise.reject(err));
-  });
+    .then(newSnippet => Promise.resolve(newSnippet))
+    .catch(err => Promise.reject(createError(400, err.message)));
+  })
+  .catch(err => Promise.reject(createError(404, err.message)));
+
 };
-
-// return new Snippet ={
-//
-// }
-
-  // return Story.findById(storyId)
-  // .then(story => {
-  //   console.log('Whole Story object: \n', story);
-  //   console.log('Whole pendingsnippet array: \n', story.pendingSnippets);
-  //   for (var i = 0; i < snippetArray.length; i++) {
-  //
-  //     if(snippetArray[i].accepted === true){
-  //       story.snippets.push(snippetArray[i]);
-  //       console.log('New array of accepted snippets: \n', story.snippets);
-  //       story.save();
-  //       // story.pendingSnippets = [];
-  //     }
-  //   }
-  //
-  // })
-  // .then(story => {
-  //   console.log('Is dis da story?', story);
-  //   Promise.resolve(story);
-  // })
-  // .catch(err => Promise.reject(err));

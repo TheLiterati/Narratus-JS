@@ -32,6 +32,21 @@ exports.fetchAccount = function(checkUser) {
   
 };
 
+exports.populateApprovedSnippets = function(storyId){
+  debug('#populateApprovedSnippets');
+  return Story.findById(storyId).populate('snippets')
+  .then(user => user)
+  .catch(err => Promise.reject(createError(404, err.message)));
+};
+
+exports.populatePendingSnippets = function(storyId){
+  debug('#populatePendingSnippets');
+
+  return Story.findById(storyId).populate('pendingSnippets')
+  .then(user => user)
+  .catch(err => Promise.reject(createError(404, err.message)));
+};
+
 exports.addToFollowed = function(userId, storyId) {
   debug('#addToFollowed');
   

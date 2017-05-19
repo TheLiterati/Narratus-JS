@@ -5,7 +5,7 @@ const debug = require('debug')('narratus:snippet-routes.js');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 module.exports = function(router){
-  //creating new snippet and adding it to the array of pending things
+  // these routes should be structured something like `/story/:storyId/snippet`
   router.post('/snippet/:storyId', bearerAuth, (req, res) => {
     debug('#POST /snippet/:storyId');
     req.body.userId = req.user._id;
@@ -30,7 +30,7 @@ module.exports = function(router){
       console.log(snippet);
       res.json(snippet);
     })
-    .catch(err => res.status(err.status).send(err.message));
+    .catch(err => res.status(404).send(err.message));
   });
 
   return router;

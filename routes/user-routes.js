@@ -25,11 +25,49 @@ module.exports = function(router) {
     .then(token => res.json(token))
     .catch(err => res.status(err.status).send(err.message));
   });
-  
-  router.put('/follow/:userId/story/:storyId', basicAuth, (req, res) => {
-    debug('PUT /follow/:storyId');
-    
-    authController.addToFollowed(req.params.userId, req.params.storyId)
+
+  router.get('/dashboard', bearerAuth, (req, res) => {
+    debug('#GET /dashboard');
+
+    let dashboardStories = {};
+
+    userController.populateOwnedStories(req.user._id)
+    .then(ownedStories => dashboardStories.ownedStories = ownedStories.ownedStories)
+    .then(()=> {
+      return userController.populateFollowedStories(req.user._id)
+      .then(followedStories => {
+        dashboardStories.followedStories = followedStories.followedStories;
+        res.json(dashboardStories);
+      })
+      .catch(err => res.status(err.status).send(err.message));
+    })
+    .catch(err => res.status(err.status).send(err.message));
+  });
+
+  router.get('/snippetapproval/:storyId', bearerAuth, (req, res) => {
+    debug('#GET /snippetapproval');
+
+    let dashboardSnippets = {};
+
+    userController.populateApprovedSnippets(req.params.storyId)
+    .then(snippets => {
+      dashboardSnippets.snippets = snippets.snippets;
+    })
+    .then(()=> {
+      return userController.populatePendingSnippets(req.params.storyId)
+      .then(pendingSnippets => {
+        dashboardSnippets.pendingSnippets = pendingSnippets.pendingSnippets;
+        res.json(dashboardSnippets);
+      })
+      .catch(err => res.status(err.status).send(err.message));
+    })
+    .catch(err => res.status(404).send(err.message));
+  });
+
+  router.put('/follow/story/:storyId', bearerAuth, (req, res) => {
+    debug('#PUT /follow/:storyId');
+
+    userController.addToFollowed(req.user._id, req.params.storyId)
     .then(story => res.json(story))
     .catch(err => res.status(err.status).send(err.message));
   });

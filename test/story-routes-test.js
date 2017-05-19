@@ -22,17 +22,17 @@ const exampleUser = {
   password: 'iamawesome',
   email: 'hi@hello.what',
 };
-// const exampleStory = {
-//   title: 'The way we built Narratus',
-//   description: 'Project week - midterm project for JS backend and final project for iOS',
-//   startSnippet: 'There were seven of us assigned to a team. And then the murders began',
-// };
+
+const exampleStory = {
+  title: 'The way we built Narratus',
+  description: 'Project week - midterm project for JS backend and final project for iOS',
+  startSnippet: 'There were seven of us assigned to a team. And then the murders began',
+};
 
 // *** STORY TESTS ***
 
-describe('Story routes', function() {
-
-  // Setup and teardown
+describe.only('Story integration tests', () =>  {
+  
   beforeEach(done => {
     new User(exampleUser)
     .generatePasswordHash(exampleUser.password)
@@ -47,6 +47,20 @@ describe('Story routes', function() {
     })
     .catch(() => done());
   });
+
+  
+  beforeEach(done => {
+    exampleStory.userId = this.tempUser._id.toString();
+    new Story(exampleStory).save()
+    .then(story => {
+      this.tempStory = story;
+      done();
+    })
+    .catch(() => done());
+  });
+  
+  afterEach(() => delete exampleStory.userId);
+  
   afterEach(done => {
     Promise.all([
       User.remove({}),
@@ -55,335 +69,169 @@ describe('Story routes', function() {
     .then(() => done())
     .catch(() => done());
   });
-
-  // POST: for story tests: 200, 400, 401
-  describe('POST: /api/story', function(){
-
-    // 200 (proper request with valid body, returns a body)
-    describe('proper request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(200);
-          done();
-        });
-      });
-    });
-    // 400 (bad request with invalid body)
-    describe('bad request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    // 401 (unauthorized with invalid username/password)
-    describe('unauthorized TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-      });
-    });
-
-  });
-
-  // GET: for story tests: 200, 401, 404
-  describe('GET: /api/story', function(){
-
-    // 200 (proper request with valid body, returns a token)
-    describe('proper request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(200);
-          done();
-        });
-      });
-    });
-
-    // 401 (unauthorized with invalid username/password)
-    describe('unauthorized TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-      });
-    });
-
-    // 404 (bad request, not found)
-    describe('bad request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/signin`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    });
-  });
-
-  // TODO: Story GET: /api/story/:storyId
-
-  // PUT: for story tests: 200, 400, 401, 404
-  describe('PUT: /api/story', function(){
-
-    // 200 (proper request with valid body, returns a body)
-    describe('proper request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(200);
-          done();
-        });
-      });
-    });
-
-    // 400 (bad request with invalid body)
-    describe('bad request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api//:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(400);
-          done();
-        });
-      });
-    });
-
-    // 401 (unauthorized with invalid username/password)
-    describe('unauthorized TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(401);
-          done();
-        });
-      });
-    });
-
-    // 404 (bad request, not found)
-    describe('bad request TBD', function(){
-      it('TBD', done => {
-        // TODO:
-        request.post(`${url}/api/story/:storyId`)
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done();
-        });
-      });
-    });
-
-  });
-
-  // DELETE: for story tests: 204
-  describe('DELETE: /api/story', function(){
-
-    // 204 (no content)
-    describe('no content TBD', function(){
-      it('TBD', done => {
-        // TODO:
+  
+  describe('POST: /api/story', () =>  {
+    
+    describe('Testing the create story method', () =>  {
+      
+      it('Should create a new story', done => {
         request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
         .end((err, res) => {
-          expect(res.status).to.equal(204);
+          expect(this.tempStory).to.exist;
+          expect(res.status).to.equal(200);
           done();
         });
       });
-    });
-  });
-// End
+      
+      it('Should create a new title', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end(() => {
+          expect(this.tempStory.title).to.equal(exampleStory.title);
+          done();
+        });
+      });
+      
+      it('Should create a new description', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end(() => {
+          expect(this.tempStory.description).to.equal(exampleStory.description);
+          done();
+        });
+      });
+      
+      it('Should create a new start snippet', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end(() => {
+          expect(this.tempStory.startSnippet).to.equal(exampleStory.startSnippet);
+          done();
+        });
+      });
+      
+      it('Should push the new story into the owner\'s ownedStories array', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          console.log(err);
+          expect(res.status).to.equal(200);
+          expect(this.tempUser.ownedStories).to.be.a('array');
+          done();
+        });
+      });
+      
+      it('Should assign the user _id to the story userId property', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end(() => {
+          expect(this.tempStory.userId[0].toString()).to.equal(this.tempUser._id.toString());
+          done();
+        });
+      });
+      
+      it('Should push the startSnippet into the story\'s snippet array', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end(() => {
+          expect(this.tempStory.startSnippet).to.equal(exampleStory.startSnippet);
+          done();
+        });
+      });
+      
+      it('Should return a 401 error on a bad token request', done => {
+        request.post(`${url}/api/story`)
+        .set({Authorization: 'Bad token'})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+      
+      it('should respond with a 404 error not found', done => {
+        request.post(`${url}/api/story/story1234`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });  //create story
+  });// POST
+  
+  describe('GET: /api/story', () =>  {
+    
+    describe('Testing the fetch story method', () =>  {
+      // TRY TO ADD MORE STORIES AND PROVE THAT THEY ARE ALL RETURNED - THIS IS A FETCHALL METHOD (FOREACH?)
+      it('Should return all of the existing stories', done => {
+        request.get(`${url}/api/story`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          expect(res.body[0].title).to.equal(this.tempStory.title);
+          expect(res.body[0].description).to.equal(this.tempStory.description);
+          expect(res.body[0].startSnippet).to.equal(this.tempStory.startSnippet);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+      
+      it('should respond with a 404 error not found', done => {
+        request.get(`${url}/api/story/story1234`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); //fetch story
+  }); // GET
+  
+  describe('GET: /story/:storyId', () =>  {
+    
+    describe('Testing the fetch stories method', () =>  {
+      
+      it('Should return a story when given an id', done => {
+        request.get(`${url}/api/story/${this.tempStory._id}`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          expect(res.body.title).to.equal(this.tempStory.title);
+          expect(res.body.description).to.equal(this.tempStory.description);
+          expect(res.body.startSnippet).to.equal(this.tempStory.startSnippet);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+      
+      it('Should return all of the snippets in the story\'s snippet array', done => {
+        request.get(`${url}/api/story/${this.tempStory._id}`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          expect(res.body.startSnippet).to.equal(this.tempStory.startSnippet);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+      
+      it('should respond with a 404 error not found', done => {
+        request.get(`${url}/api/story/story1234`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .send(exampleStory)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); //fetch stories
+  }); // GET
 });
-
-
-
-
-
-
-
-
-
-// ### PREVIOUS 5/16 ###
-
-//   describe('Unregistered route', function() {
-//     it('should respond with a status of 404 not found', done => {
-//
-//
-//       done();
-//     });
-//   });
-//
-//   describe('POST /api/story', function() {
-//     describe('Request with a valid body', function() {
-//       it('should return a story', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('Request with an invalid token', function() {
-//       it('should respond with a 401 unauthorized error', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('Request with an invalid body', function() {
-//       it('should respond with a 400 invalid body error', done => {
-//
-//         done();
-//       });
-//     });
-//   });
-//
-//   describe('GET /api/story', function() {
-//     beforeEach(done => {
-//       exampleStory.userId = this.tempUser._id.toString();
-//       new Story(exampleStory).save()
-//       .then(story => {
-//         this.tempStory = story;
-//         done();
-//       })
-//       .catch(() => done());
-//     });
-//
-//     afterEach(() => delete exampleStory.userId);
-//
-//     describe('Request with a valid body', function() {
-//       it('should return a story', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('Request with invalid token', function() {
-//       it('should respond with a 401 unauthorized error', done => {
-//
-//
-//         done();
-//       });
-//     });
-//
-//     describe('Request with invalid id', function() {
-//       it('should respond with a 404 not found error', done => {
-//
-//         done();
-//       });
-//     });
-//   });
-//
-//   describe('GET /api/story/:storyId', function() {
-//     beforeEach(done => {
-//       exampleStory.userId = this.tempUser._id.toString();
-//       new Story(exampleStory).save()
-//       .then(story => {
-//         this.tempStory = story;
-//         done();
-//       })
-//       .catch(() => done());
-//     });
-//
-//     afterEach(() => delete exampleStory.userId);
-//
-//     describe('Request with a valid body', function() {
-//       it('should return a story', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('Request with invalid token', function() {
-//       it('should respond with a 401 unauthorized error', done => {
-//
-//
-//         done();
-//       });
-//     });
-//
-//     describe('Request with invalid id', function() {
-//       it('should respond with a 404 not found error', done => {
-//
-//         done();
-//       });
-//     });
-//   });
-//
-//   describe('PUT /api/story/:storyId', function() {
-//     let updatedStory = {
-//       title: 'Did we survive project week?',
-//       description: 'A reflection on how the week went',
-//       startSnippet: 'We are not sure yet, check back on Friday!',
-//     };
-//
-//     beforeEach(done => {
-//       exampleStory.userId = this.tempUser._id.toString();
-//       new Story(exampleStory).save()
-//       .then(story => {
-//         this.tempStory = story;
-//         done();
-//       });
-//     });
-//
-//     afterEach(() => delete exampleStory.userId);
-//
-//     describe('A request with a valid body', function() {
-//       it('should return an updated story', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('A request with an unauthorized token', function() {
-//       it('should return an error of 401 unauthorized', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('A request with an invalid body', function() {
-//       it('should return an error of 400 invalid body', done => {
-//
-//         done();
-//       });
-//     });
-//
-//     describe('A request with an invalid id', function() {
-//       it('should return an error of 404 not found', done => {
-//
-//         done();
-//       });
-//     });
-//   });
-//
-//   describe('DELETE /api/story/:storyId', function() {
-//     beforeEach(done => {
-//       exampleStory.userId = this.tempUser._id.toString();
-//       new Story(exampleStory).save()
-//       .then(story => {
-//         this.tempStory = story;
-//         done();
-//       });
-//     });
-//
-//     afterEach(() => delete exampleStory.userId);
-//
-//     it('should remove the story and return a status of 204', done => {
-//
-//       done();
-//     });
-//   });
-// });

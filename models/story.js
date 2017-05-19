@@ -12,9 +12,24 @@ const storySchema = Schema({
   genre: {type: String, default: 'Fiction', require: true},
   lastUpdated: {type: Date}, //NOTE stretch
   snippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
-  snippetCount: {type: Number, default: 0},
+
   pendingSnippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
+  snippetCount: {type: Number, default: 0},
   pendingSnippetCount: {type: Number, default: 0},
 });
+
+storySchema.methods.addStartSnippet = function(snippet) {
+  debug('#addStartSnippet');
+
+  return new Promise((resolve, reject) => {
+    if(!snippet) return reject(createError(401, 'Story push failed'));
+    let newSnippet = new Snippet();
+    console.log('newSnippet', newSnippet);
+    newSnippet.snippetContent = snippet;
+    newSnippet.save();
+    this.snippets.push(newSnippet);
+    resolve(this);
+  });
+};
 
 module.exports = mongoose.model('story', storySchema);

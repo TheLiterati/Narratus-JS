@@ -1,7 +1,22 @@
 # Narratus
 
 ## Description
+
+## Team Name
+* The Literati
+
 ## Team Members
+
+### iOS
+* Christina Lee
+* Mike Miksch
+* Serg Tsogtbaatar
+
+### JavaScript
+* Allie Grampa
+* Caleb Wells
+* Michael Padget
+* Shelly Tang
 
 ## Sites
 ### Deployed Website

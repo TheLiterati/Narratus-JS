@@ -21,12 +21,15 @@ exports.createStory = function(userId, story, snippet){
   debug('#createStory');
   return User.findOne(userId)
   .then(user => {
+
     new Story(story).save()
+
     .then(newStory => {
       user.ownedStories.push(newStory);
       user.save()
       .then(() => newStory)
       .catch(err => Promise.reject(createError(400, err.message)));
+
     })
     .then(newStory => Promise.resolve(newStory))
     .catch(err => Promise.reject(createError(400, err.message)));
@@ -47,6 +50,7 @@ exports.fetchStory = function(id) {
   debug('#fetchStory');
 
   return Story.findById({'_id':id}).populate('snippets')
+
   .then(story => {
     return Promise.resolve(story);
   })

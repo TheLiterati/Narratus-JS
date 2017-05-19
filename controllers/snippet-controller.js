@@ -10,24 +10,24 @@ module.exports = exports = {};
 
 exports.createSnippet = function(storyId, snippet){
   debug('#createSnippet');
-
+  
   if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
   if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
-
+  
   return Story.findById(storyId)
   .then(story => {
-    new Snippet(snippet).save()
+    return new Snippet(snippet).save()
     .then(newSnippet => {
       console.log('Story.pendingSnippetCount', story.pendingSnippetCount);
       if (story.pendingSnippetCount < 10) {
         story.pendingSnippets.push(newSnippet);
         story.pendingSnippetCount +=1;
         // console.log('pending count in if conditional', story.pendingSnippetCount);
-        story.save()
+        return story.save()
         .then(() => newSnippet)
         .catch(err => Promise.reject(createError(400, err.message)));
         // return newSnippet;
-
+        
       }
     })
     .then(newSnippet => Promise.resolve(newSnippet))
@@ -38,29 +38,29 @@ exports.createSnippet = function(storyId, snippet){
 
 exports.approveSnippet = function(storyId, snippet){
   debug('#approveSnippet');
-
+  
   if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
   if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
-
+  
   console.log('snippet.snippetContent', snippet.snippetContent);
   console.log('snippet', snippet);
-
+  
   return Story.findById(storyId)
   .then(story => {
     return new Snippet(snippet).save()
     .then(newSnippet => {
       // if (story.snippetCount < 10) {
-        console.log('newSnippet', newSnippet);
-        console.log('story.snippets IS THIS:', story.snippets);
-        story.snippets.push(newSnippet);
-        story.snippetCount +=1;
-        story.pendingSnippets = [];
-        story.pendingSnippetCount = 0;
-        // console.log('pending count in if conditional', story.pendingSnippetCount);
-        story.save()
-        .then(() => Promise.resolve(newSnippet))
-        .catch(err => Promise.reject(createError(400, err.message)));
-
+      console.log('newSnippet', newSnippet);
+      console.log('story.snippets IS THIS:', story.snippets);
+      story.snippets.push(newSnippet);
+      story.snippetCount +=1;
+      story.pendingSnippets = [];
+      story.pendingSnippetCount = 0;
+      // console.log('pending count in if conditional', story.pendingSnippetCount);
+      story.save()
+      .then(() => Promise.resolve(newSnippet))
+      .catch(err => Promise.reject(createError(400, err.message)));
+      
     })
     .then(newSnippet => Promise.resolve(newSnippet))
     .catch(err => Promise.reject(createError(400, err.message)));

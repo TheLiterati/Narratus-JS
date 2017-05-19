@@ -12,10 +12,10 @@ module.exports = function(router) {
     req.body.userId = req.user._id;
     return storyController.createStory(req.params.userId, req.body, req.body.startSnippet)
     .then(story => {
-      console.log(req.body);
+      console.log(story);
       res.json(story);
     })
-    .catch(() => res.send(createError(400, 'nope')));
+    .catch(err => res.status(err.status).send(err.message));
   });
 
   router.get('/story', (req, res) => {

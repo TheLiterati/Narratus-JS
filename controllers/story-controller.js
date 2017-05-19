@@ -46,7 +46,7 @@ exports.fetchStories = function() {
 exports.fetchStory = function(id) {
   debug('#fetchStory');
 
-  return Story.findById({'_id':id}).populate('pendingSnippets')
+  return Story.findById({'_id':id}).populate('snippets')
   .then(story => {
     return Promise.resolve(story);
   })

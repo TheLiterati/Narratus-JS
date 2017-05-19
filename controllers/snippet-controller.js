@@ -16,14 +16,17 @@ exports.createSnippet = function(storyId, snippet){
 
   return Story.findById(storyId)
   .then(story => {
-    return new Snippet(snippet).save()
+    new Snippet(snippet).save()
     .then(newSnippet => {
+      console.log('Story.pendingSnippetCount', story.pendingSnippetCount);
       if (story.pendingSnippetCount < 10) {
         story.pendingSnippets.push(newSnippet);
-        story.pendingSnippetCount++;
+        story.pendingSnippetCount +=1;
         // console.log('pending count in if conditional', story.pendingSnippetCount);
-        story.save();
-        return newSnippet;
+        story.save()
+        .then(() => newSnippet)
+        .catch(err => Promise.reject(createError(400, err.message)));
+        // return newSnippet;
       }
     })
     .then(newSnippet => Promise.resolve(newSnippet))
@@ -38,18 +41,42 @@ exports.approveSnippet = function(storyId, snippet){
   if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
   if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
 
+  console.log('snippet.snippetContent', snippet.snippetContent);
+  console.log('snippet', snippet);
+
   return Story.findById(storyId)
   .then(story => {
-
     return new Snippet(snippet).save()
-    .then(approvedSnippet => {
-      story.snippets.push(approvedSnippet);
-      story.snippetCount += 1;
-      story.pendingSnippets = [];
-      story.save();
-      return approvedSnippet;
+    .then(newSnippet => {
+      // if (story.snippetCount < 10) {
+        console.log('newSnippet', newSnippet);
+        console.log('story.snippets IS THIS:', story.snippets);
+        story.snippets.push(newSnippet);
+        story.snippetCount +=1;
+        story.pendingSnippets = [];
+        story.pendingSnippetCount = 0;
+        // console.log('pending count in if conditional', story.pendingSnippetCount);
+        story.save()
+        .then(() => Promise.resolve(newSnippet))
+        .catch(err => Promise.reject(createError(400, err.message)));
+
     })
-    .then(approvedSnippet => Promise.resolve(approvedSnippet))
-    .catch(err => Promise.reject(err));
-  });
+    .then(newSnippet => Promise.resolve(newSnippet))
+    .catch(err => Promise.reject(createError(400, err.message)));
+  })
+  .catch(err => Promise.reject(createError(404, err.message)));
+  // return Story.findById(storyId)
+  // .then(story => {
+  //   return new Snippet(snippet.snippetContent).save()
+  //   .then(approvedSnippet => {
+  //     story.snippets.push(approvedSnippet.snippetContent);
+  //     story.snippetCount += 1;
+  //     story.pendingSnippets = [];
+  //     story.save()
+  //     .then(snippet => Promise.resolve(snippet))
+  //     .catch(err => Promise.reject(createError(404, 'Cannot find Snippet')));
+  //   })
+  //   .then(approvedSnippet => Promise.resolve(approvedSnippet))
+  //   .catch(err => Promise.reject(err));
+  // });
 };

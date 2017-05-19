@@ -19,21 +19,22 @@ module.exports = exports = {};
 
 exports.createStory = function(userId, story, snippet){
   debug('#createStory');
-  let newStory;
   return User.findOne(userId)
   .then(user => {
-    newStory = new Story(story).save()
-    .then(newStory => {      
+    new Story(story).save()
+    .then(newStory => {
       user.ownedStories.push(newStory);
-      user.save();
-      return newStory;
+      user.save()
+      .then(() => newStory)
+      .catch(err => Promise.reject(createError(400, err.message)));
     })
     // .then(newStory => newStory.snippets.push(snippet))
     .then(newStory => {
       console.log('made it');
       newStory.addStartSnippet(snippet);
-      newStory.save();
-      return newStory;
+      newStory.save()
+      .then(() => newStory)
+      .catch(err => Promise.reject(createError(400, err.message)));
     })
     .then(newStory => Promise.resolve(newStory))
     .catch(() => Promise.reject(createError(400, 'Error in create story')));

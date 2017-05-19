@@ -20,7 +20,7 @@ module.exports = function(router){
   });
 
   //approving snippets and pushing them to the array of approved snippets
-  router.post('/snippet/:storyId', bearerAuth, (req, res) => {
+  router.post('/snippet/approve/:storyId', bearerAuth, (req, res) => {
     debug('#POST /snippet/:storyId');
     req.body.userId = req.user._id;
     console.log('UserId:', req.body.userId);

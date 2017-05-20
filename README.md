@@ -26,7 +26,7 @@ JavaScript
   * JS: https://github.com/TheLiterati/Narratus-JS
   * iOS: https://github.com/TheLiterati/Narratus-ios
 
-## Version 0.1.0
+## Version 0.5.0
 
 ## Schemas
 ### User
@@ -153,7 +153,7 @@ HTTP POST: 3000/api/story title="title" description="description" startSnippet="
 ```
 
 * **GET:** /api/story
-  * This does not require basic or bearer authorization
+  * This does not require basic or bearer authentication
 ```
 HTTP GET: 3000/api/story
 ```

@@ -322,9 +322,7 @@ describe('Snippet integration tests', () => {
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)
         .end(() => {
-          console.log('the tempStory',this.tempStory);
-          console.log('this pendingSnippets array', this.tempStory.pendingSnippets);
-          expect();
+          expect(this.tempStory.pendingSnippets).to.exist;
           done();
         });
       }); //end of it block;
@@ -344,7 +342,11 @@ describe('Snippet integration tests', () => {
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)
         .end((err, res) => {
+          expect(res.body.pendingSnippetCount).to.not.equal(2);
+          expect(res.body.pending).to.be.true;
           expect(res.status).to.equal(200);
+          let date = new Date(res.body.created).toString();
+          expect(date).to.not.equal('Invalid Date');
           done();
         });
       }); //end of it block;
@@ -354,7 +356,7 @@ describe('Snippet integration tests', () => {
         .set({Authorization: `Bearer ${this.tempToken}`})
         .send(exampleSnippet)
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.body.pendingSnippetCount).to.not.equal(11);
           done();
         });
       }); //end of it block;
@@ -401,60 +403,10 @@ describe('Snippet integration tests', () => {
     describe('The approveSnippet method', () => {
       
       it('Should return a story with a story id passed in', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
+        request.post(`${url}/api/snippet/approve/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
-        .send(exampleSnippet)
         .end((err, res) => {
-          expect(res.body).to.be.a('object');
-          done();
-        });
-      }); //end of it block;
-
-      it('Should create a new snippet', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
-        .set({Authorization: `Bearer ${this.tempToken}`})
-        .send(exampleSnippet)
-        .end((err, res) => {
-          expect(res.body).to.be.a('object');
-          done();
-        });
-      }); //end of it block;
-
-      it('Should have an empty approveSnippet array beforehand', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
-        .set({Authorization: `Bearer ${this.tempToken}`})
-        .send(exampleSnippet)
-        .end((err, res) => {
-          expect(res.body).to.be.a('object');
-          done();
-        });
-      }); //end of it block;
-
-      it('Should add the snippet to the approvedSnippet array', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
-        .set({Authorization: `Bearer ${this.tempToken}`})
-        .send(exampleSnippet)
-        .end((err, res) => {
-          expect(res.body).to.be.a('object');
-          done();
-        });
-      }); //end of it block;
-
-      it('Should increment the approvedSnippet count by one each time', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
-        .set({Authorization: `Bearer ${this.tempToken}`})
-        .send(exampleSnippet)
-        .end((err, res) => {
-          expect(res.body).to.be.a('object');
-          done();
-        });
-      }); //end of it block;
-
-      it('Should reset the empty pendingSnippets array to empty after approval', done => {
-        request.post(`${url}/api/snippet/${this.tempStory._id}`)
-        .set({Authorization: `Bearer ${this.tempToken}`})
-        .send(exampleSnippet)
-        .end((err, res) => {
+          console.log('res.body', res.body);
           expect(res.body).to.be.a('object');
           done();
         });

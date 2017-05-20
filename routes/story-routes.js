@@ -32,19 +32,5 @@ module.exports = function(router) {
     .catch(err => res.status(err.status).send(err.message));
   });
 
-  router.put('/story/:storyId', bearerAuth, (req, res) => {  //NOTE: stretch
-    debug('#PUT /api/story/:storyId');
-    storyController.updateStory(req)
-    .then(story => res.json(story))
-    .catch(err => res.status(err.status).send(err.message));
-  });
-
-  router.delete('/story/:storyId', bearerAuth, (req, res) => {
-    debug('#DELETE /api/story/:storyId');
-    storyController.deleteStory(req.params.storyId, req.user._id)
-    .then(err => res.status(204).send(err.message))
-    .catch(err => res.status(err.status).send(err.message));
-  });
-
   return router;
 };

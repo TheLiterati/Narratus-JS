@@ -30,7 +30,7 @@ const exampleStory = {
 };
 
 describe('User routes', function() {
-
+  
   describe('Testing user Schema', () => {
     it('Should create a user when given the correct information', done => {
       let req = {};
@@ -60,12 +60,12 @@ describe('User routes', function() {
       done();
     });
   });
-
+  
   // *** USER AUTHENTICATION ***
-
+  
   // GET: for unauthenticated user: 200, 401, 404
   describe('GET: /api/signup', function(){
-
+    
     // 404 (bad request, not found)
     describe('Signing in on the signup page', function(){
       it('Should result in a bad request 404 not found', done => {
@@ -76,7 +76,7 @@ describe('User routes', function() {
         });
       });
     });
-
+    
     // NOTE: this may or may not be needed here
     after(done => {
       User.remove({})
@@ -84,12 +84,12 @@ describe('User routes', function() {
       .catch();
     });
   });
-
+  
   // *** USER TESTS ***
-
+  
   // POST: for user tests: 200, 400, 401
   describe('POST: /api/signup', function(){
-
+    
     // 200 (proper request with valid body, returns a token)
     describe('user filled out form data correctly', function(){
       it('should return a token', done => {
@@ -102,7 +102,7 @@ describe('User routes', function() {
         });
       });
     });
-
+    
     // 400 (bad request with invalid body)
     describe('user entered missing or incorrect form data', function(){
       it('should respond with a 400 bad request error', done => {
@@ -114,7 +114,7 @@ describe('User routes', function() {
         });
       });
     });
-
+    
     // NOTE: this may or may not be needed here
     after(done => {
       User.remove({})
@@ -122,7 +122,7 @@ describe('User routes', function() {
       .catch();
     });
   });
-
+  
   // GET: for user tests: 200, 401, 400
   describe('GET: /api/signin', function(){
     // Test user setup and teardown
@@ -141,7 +141,7 @@ describe('User routes', function() {
       .then(() => done())
       .catch(done);
     });
-
+    
     // 200 (proper request with valid body, returns a token)
     describe('user logged in with correct credentials', function() {
       it('should respond with 200 ok status and token', done => {
@@ -154,7 +154,7 @@ describe('User routes', function() {
         });
       });
     });
-
+    
     // 401 (unauthorized with invalid username/password)
     describe('user entered incorrect login information', function(){
       it('should repond with a 401 unauthorized error', done => {
@@ -167,7 +167,7 @@ describe('User routes', function() {
       });
     });
   });
-
+  
   // GET: for user tests: 404
   describe('GET: /api/signin', function() {
     // 404 (bad request, not found)
@@ -180,7 +180,7 @@ describe('User routes', function() {
         });
       });
     });
-
+    
     // NOTE: this may or may not be needed here
     after(done => {
       User.remove({})
@@ -188,11 +188,11 @@ describe('User routes', function() {
       .catch();
     });
   });
-  // End
+
 });
 
 describe('User integration tests', () => {
-
+  
   // Test user setup and teardown
   before(done => {
     new User(testUser)
@@ -213,11 +213,11 @@ describe('User integration tests', () => {
     .then(() => done())
     .catch(done);
   });
-
+  
   describe('POST: /api/signup', () => {
 
     describe('Testing the create account method', () => {
-
+      
       it('Should create a new user', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -237,7 +237,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-
+      
       it('Should create a hashed password', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -275,11 +275,11 @@ describe('User integration tests', () => {
       });
     });
   });
-
+  
   describe('GET: /api/signin', () => {
-
+    
     describe('Testing the fetch account method', () => {
-
+      
       it('Should return a user when logging in', done => {
         request.get(`${url}/api/signin`)
         .set({Authorization: `Basic ${this.tempToken}`})
@@ -289,7 +289,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-
+      
       it('Should generate a new token', done => {
         request.get(`${url}/api/signin`)
         .set({Authorization: `Basic ${this.tempToken}`})
@@ -299,15 +299,17 @@ describe('User integration tests', () => {
           done();
         });
       });
-
+      
     }); // testing the create
-
+    
   }); // end get signin
+
 
   describe('GET: /snippetapproval/:storyId', () => {
 
 
     describe('testing the snippet approval route', () => {
+
 
       beforeEach(done => {
         new User(testUser)
@@ -323,7 +325,6 @@ describe('User integration tests', () => {
         })
         .catch(() => done());
       });
-
 
       beforeEach(done => {
         exampleStory.userId = this.tempUser._id.toString();
@@ -372,6 +373,7 @@ describe('User integration tests', () => {
         .end((err, res) => {
           console.log('this.tempstory', this.tempStory);
           expect(res.status).to.equal(404);
+
           done();
         });
       });
@@ -389,7 +391,9 @@ describe('User integration tests', () => {
           expect(res.body).to.be.a('object');
           done();
         });
+
       });
     });
   }); // end integration tests
 });
+

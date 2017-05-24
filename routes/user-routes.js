@@ -64,14 +64,6 @@ module.exports = function(router) {
     })
     .catch(err => res.status(404).send(err.message));
   });
-
-  router.put('/follow/story/:storyId', bearerAuth, (req, res) => {
-    debug('#PUT /follow/:storyId');
-
-    userController.addToFollowed(req.user._id, req.params.storyId)
-    .then(story => res.json(story))
-    .catch(err => res.status(err.status).send(err.message));
-  });
   
   return router;
 };

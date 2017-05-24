@@ -42,7 +42,7 @@ describe('Snippet routes', function() {
       expect(user).to.be.a('object');
       done();
     });
-    
+
     it('Should not create a story when given invalid information', done => {
       let req = {};
       req.body = {snippetContent: ''};
@@ -55,7 +55,7 @@ describe('Snippet routes', function() {
       done();
     });
   });
-  
+
   describe('POST /api/snippet/:storyId', function() {
 
     beforeEach(done => {
@@ -401,7 +401,7 @@ describe('Snippet integration tests', () => {
     });
 
     describe('The approveSnippet method', () => {
-      
+
       it('Should return a story with a story id passed in', done => {
         request.post(`${url}/api/snippet/approve/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
@@ -415,7 +415,7 @@ describe('Snippet integration tests', () => {
     }); //end of approveSnippet test
 
     // describe('POST /api/snippet/:storyId', function() {
-    // 
+    //
     // }); //end of :/api/snippet/approve/:storyId method
 
   });

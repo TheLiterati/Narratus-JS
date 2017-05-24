@@ -45,7 +45,7 @@ describe('User routes', function() {
       expect(user).to.be.a('object');
       done();
     });
-    
+
     it('Should not create a user when given invalid information', done => {
       let req = {};
       req.body = {username: '', password: '', email: ''};
@@ -188,7 +188,7 @@ describe('User routes', function() {
       .catch();
     });
   });
-  // End  
+
 });
 
 describe('User integration tests', () => {
@@ -215,19 +215,19 @@ describe('User integration tests', () => {
   });
   
   describe('POST: /api/signup', () => {
-    
+
     describe('Testing the create account method', () => {
       
       it('Should create a new user', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
         .end((err, res) => {
-          console.log('res.body', this.tempUser);          
+          console.log('res.body', this.tempUser);
           expect(res.body).to.be.a('object');
           done();
         });
       });
-      
+
       it('Should create a token', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -246,7 +246,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('Should create a username', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -255,7 +255,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('Should create an email', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -264,7 +264,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('Should create an ID', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -303,12 +303,14 @@ describe('User integration tests', () => {
     }); // testing the create
     
   }); // end get signin
-  
+
+
   describe('GET: /snippetapproval/:storyId', () => {
-    
-    
+
+
     describe('testing the snippet approval route', () => {
-      
+
+
       beforeEach(done => {
         new User(testUser)
         .generatePasswordHash(testUser.password)
@@ -323,8 +325,7 @@ describe('User integration tests', () => {
         })
         .catch(() => done());
       });
-      
-      
+
       beforeEach(done => {
         exampleStory.userId = this.tempUser._id.toString();
         new Story(exampleStory).save()
@@ -334,9 +335,9 @@ describe('User integration tests', () => {
         })
         .catch(() => done());
       });
-      
+
       afterEach(() => delete exampleStory.userId);
-      
+
       afterEach(done => {
         Promise.all([
           User.remove({}),
@@ -345,7 +346,7 @@ describe('User integration tests', () => {
         .then(() => done())
         .catch(() => done());
       });
-      
+
       it('should return a status of 200 upon proper request', done => {
         request.get(`${url}/api/snippetapproval/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
@@ -355,7 +356,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('should return a status of 401 if unauthorized', done => {
         request.get(`${url}/api/snippetapproval/${this.tempStory._id}`)
         .set({Authorization: 'Bad token'})
@@ -365,17 +366,18 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('should return a status of 404 if not found', done => {
         request.get(`${url}/api/snippetapproval`)
         .set({Authorization: `Bearer ${this.tempToken}`})
         .end((err, res) => {
           console.log('this.tempstory', this.tempStory);
           expect(res.status).to.equal(404);
-          done();  
+
+          done();
         });
       });
-      
+
       it('populated approved should return a specific user stories', done => {
         request.get(`${url}/api/snippetapproval/${this.tempStory._id}`)
         .set({Authorization: `Bearer ${this.tempToken}`})
@@ -389,7 +391,9 @@ describe('User integration tests', () => {
           expect(res.body).to.be.a('object');
           done();
         });
-      });      
+
+      });
     });
   }); // end integration tests
 });
+

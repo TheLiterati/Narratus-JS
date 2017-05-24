@@ -5,7 +5,7 @@ const request = require('superagent');
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 const User = require('../models/user');
-// const Story = require('../models/story');
+const Story = require('../models/story');
 
 mongoose.Promise = Promise;
 
@@ -21,6 +21,12 @@ const testUser = {
   password: 'thebestpasswordever',
   email: 'christina@narratus.io',
   followedStories: [],
+};
+
+const exampleStory = {
+  title: 'The way we built Narratus',
+  description: 'Project week - midterm project for JS backend and final project for iOS',
+  startSnippet: 'There were seven of us assigned to a team. And then the murders began',
 };
 
 describe('User routes', function() {
@@ -39,7 +45,7 @@ describe('User routes', function() {
       expect(user).to.be.a('object');
       done();
     });
-    
+
     it('Should not create a user when given invalid information', done => {
       let req = {};
       req.body = {username: '', password: '', email: ''};
@@ -182,7 +188,7 @@ describe('User routes', function() {
       .catch();
     });
   });
-// End  
+  // End
 });
 
 describe('User integration tests', () => {
@@ -209,19 +215,19 @@ describe('User integration tests', () => {
   });
 
   describe('POST: /api/signup', () => {
-    
+
     describe('Testing the create account method', () => {
 
       it('Should create a new user', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
         .end((err, res) => {
-          console.log('res.body', this.tempUser);          
+          console.log('res.body', this.tempUser);
           expect(res.body).to.be.a('object');
           done();
         });
       });
-      
+
       it('Should create a token', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -240,7 +246,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('Should create a username', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -249,7 +255,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('Should create an email', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -258,7 +264,7 @@ describe('User integration tests', () => {
           done();
         });
       });
-      
+
       it('Should create an ID', done => {
         request.post(`${url}/api/signup`)
         .send(testUser)
@@ -298,4 +304,92 @@ describe('User integration tests', () => {
 
   }); // end get signin
 
-}); // end integration tests
+  describe('GET: /snippetapproval/:storyId', () => {
+
+
+    describe('testing the snippet approval route', () => {
+
+      beforeEach(done => {
+        new User(testUser)
+        .generatePasswordHash(testUser.password)
+        .then(user => user.save())
+        .then(user => {
+          this.tempUser = user;
+          return user.generateToken();
+        })
+        .then(token => {
+          this.tempToken = token;
+          done();
+        })
+        .catch(() => done());
+      });
+
+
+      beforeEach(done => {
+        exampleStory.userId = this.tempUser._id.toString();
+        new Story(exampleStory).save()
+        .then(story => {
+          this.tempStory = story;
+          done();
+        })
+        .catch(() => done());
+      });
+
+      afterEach(() => delete exampleStory.userId);
+
+      afterEach(done => {
+        Promise.all([
+          User.remove({}),
+          Story.remove({}),
+        ])
+        .then(() => done())
+        .catch(() => done());
+      });
+
+      it('should return a status of 200 upon proper request', done => {
+        request.get(`${url}/api/snippetapproval/${this.tempStory._id}`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          console.log('this.tempstory', this.tempStory);
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+
+      it('should return a status of 401 if unauthorized', done => {
+        request.get(`${url}/api/snippetapproval/${this.tempStory._id}`)
+        .set({Authorization: 'Bad token'})
+        .end((err, res) => {
+          console.log('this.tempstory', this.tempStory);
+          expect(res.status).to.equal(401);
+          done();
+        });
+      });
+
+      it('should return a status of 404 if not found', done => {
+        request.get(`${url}/api/snippetapproval`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          console.log('this.tempstory', this.tempStory);
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+
+      it('populated approved should return a specific user stories', done => {
+        request.get(`${url}/api/snippetapproval/${this.tempStory._id}`)
+        .set({Authorization: `Bearer ${this.tempToken}`})
+        .end((err, res) => {
+          expect(this.tempToken).to.be.a('string');
+          console.log('res.body', res.body);
+          expect(res.body.snippets).to.exist;
+          expect(res.body.snippets).to.be.a('array');
+          expect(res.body.pendingSnippets).to.exist;
+          expect(res.body.pendingSnippets).to.be.a('array');
+          expect(res.body).to.be.a('object');
+          done();
+        });
+      });
+    });
+  }); // end integration tests
+});

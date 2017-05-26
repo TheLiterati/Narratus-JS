@@ -72,6 +72,6 @@ module.exports = function(router) {
     .then(story => res.json(story))
     .catch(err => res.status(err.status).send(err.message));
   });
-  
+
   return router;
 };

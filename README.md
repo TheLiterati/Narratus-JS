@@ -26,7 +26,7 @@ JavaScript
   * JS: https://github.com/TheLiterati/Narratus-JS
   * iOS: https://github.com/TheLiterati/Narratus-ios
 
-## Version 0.5.0
+## Version 0.6.1
 
 ## Schemas
 ### User

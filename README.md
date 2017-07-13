@@ -19,14 +19,15 @@ JavaScript
   * Shelly Tang
 
 ## Sites
-* Deployed API  
-  * https://dashboard.heroku.com/apps/narratus-production
-* GitHub
-  * Organization: https://github.com/TheLiterati
-  * JS: https://github.com/TheLiterati/Narratus-JS
-  * iOS: https://github.com/TheLiterati/Narratus-ios
+### Deployed API  
+* https://dashboard.heroku.com/apps/narratus-production
+### GitHub
+* Organization: https://github.com/TheLiterati
+* JS: https://github.com/TheLiterati/Narratus-JS
+* iOS: https://github.com/TheLiterati/Narratus-ios
 
-## Version 0.6.1
+## Version
+* 0.6.1
 
 ## Schemas
 ### User

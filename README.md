@@ -25,7 +25,7 @@ With this RESTful API, users can sign-up and sign-in, read and subscribe to shor
 * JS: https://github.com/TheLiterati/Narratus-JS
 * iOS: https://github.com/TheLiterati/Narratus-ios
 ## Version
-* 1.0.0
+* 0.6.1
 
 ## Schemas
 ### User schema

@@ -22,7 +22,7 @@ storySchema.methods.addStartSnippet = function(snippet) {
   debug('#addStartSnippet');
 
   return new Promise((resolve, reject) => {
-    if(!snippet) return reject(createError(401, 'Story push failed'));
+    if(!snippet) return Promise.reject(createError(401, 'Story push failed'));
     let newSnippet = new Snippet();
     console.log('newSnippet', newSnippet);
     newSnippet.snippetContent = snippet;

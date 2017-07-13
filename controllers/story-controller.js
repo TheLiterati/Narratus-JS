@@ -12,9 +12,7 @@ exports.createStory = function(userId, story, snippet){
   debug('#createStory');
   return User.findOne(userId)
   .then(user => {
-
     return new Story(story).save()
-
     .then(newStory => {
       user.ownedStories.push(newStory);
       return user.save()

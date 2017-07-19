@@ -11,10 +11,10 @@ const storySchema = Schema({
   created: {type: Date, default: Date.now, required: true},
   genre: {type: String, default: 'Fiction', require: true},
   lastUpdated: {type: Date}, //NOTE stretch
+  open: {type: Boolean, default: true},
   snippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
-
-  pendingSnippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
   snippetCount: {type: Number, default: 0},
+  pendingSnippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
   pendingSnippetCount: {type: Number, default: 0},
 });
 

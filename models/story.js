@@ -10,7 +10,7 @@ const storySchema = Schema({
   startSnippet: {type: String, required: true},
   created: {type: Date, default: Date.now, required: true},
   genre: {type: String, default: 'Fiction', require: true},
-  lastUpdated: {type: Date}, //NOTE stretch
+  lastUpdated: {type: Date, default: Date.now, required: true}, //NOTE stretch
   open: {type: Boolean, default: true},
   snippets: [{type: Schema.Types.ObjectId, ref: 'snippet'}],
   snippetCount: {type: Number, default: 0},

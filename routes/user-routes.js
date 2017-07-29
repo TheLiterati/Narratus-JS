@@ -44,25 +44,38 @@ module.exports = function(router) {
     })
     .catch(err => res.status(err.status).send(err.message));
   });
+//NOTE: Original get snippetapproval page route
+  // router.get('/snippetapproval/:storyId', bearerAuth, (req, res) => {
+  //   debug('#GET /snippetapproval');
+  //
+  //   let dashboardSnippets = {};
+  //
+  //   userController.populateApprovedSnippets(req.params.storyId)
+  //   .then(snippets => {
+  //     dashboardSnippets.snippets = snippets.snippets;
+  //   })
+  //   .then(()=> {
+  //     return userController.populatePendingSnippets(req.params.storyId)
+  //     .then(pendingSnippets => {
+  //       dashboardSnippets.pendingSnippets = pendingSnippets.pendingSnippets;
+  //       res.json(dashboardSnippets);
+  //     })
+  //     .catch(err => res.status(err.status).send(err.message));
+  //   })
+  //   .catch(err => res.status(404).send(err.message));
+  // });
 
   router.get('/snippetapproval/:storyId', bearerAuth, (req, res) => {
-    debug('#GET /snippetapproval');
+    debug('#GET snippet approval');
 
-    let dashboardSnippets = {};
+    let editStory = {};
 
-    userController.populateApprovedSnippets(req.params.storyId)
-    .then(snippets => {
-      dashboardSnippets.snippets = snippets.snippets;
+    userController.populateEditStory(req.params.storyId)
+    .then(story => {
+      editStory = story.story;
+      res.json(editStory);
     })
-    .then(()=> {
-      return userController.populatePendingSnippets(req.params.storyId)
-      .then(pendingSnippets => {
-        dashboardSnippets.pendingSnippets = pendingSnippets.pendingSnippets;
-        res.json(dashboardSnippets);
-      })
-      .catch(err => res.status(err.status).send(err.message));
-    })
-    .catch(err => res.status(404).send(err.message));
+    .catch(err => res.status(err.status).send(err.message));
   });
 
   router.put('/follow/story/:storyId', bearerAuth, (req, res) => {

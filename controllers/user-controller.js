@@ -62,6 +62,15 @@ exports.populatePendingSnippets = function(storyId){
   .catch(err => Promise.reject(createError(404, err.message)));
 };
 
+exports.populateEditStory = function(storyId){
+  debug('#populateEditStory');
+  return Story.findById(storyId)
+  .then(() => Story.findById(storyId).populate('snippets pendingSnippets'))
+  .then(user => user)
+  .catch(err => Promise.reject(createError(404, err.message)));
+};
+
+
 exports.addToFollowed = function(userId, storyId) {
   debug('#addToFollowed');
 

@@ -10,10 +10,10 @@ module.exports = exports = {};
 
 exports.createSnippet = function(storyId, snippet){
   debug('#createSnippet');
-  
+
   if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
   if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
-  
+
   return Story.findById(storyId)
   .then(story => {
     return new Snippet(snippet).save()
@@ -26,7 +26,6 @@ exports.createSnippet = function(storyId, snippet){
         return story.save()
         .then(() => newSnippet)
         .catch(err => Promise.reject(createError(400, err.message)));
-        
       }
     })
     .then(newSnippet => Promise.resolve(newSnippet))
@@ -35,36 +34,28 @@ exports.createSnippet = function(storyId, snippet){
   .catch(err => Promise.reject(createError(404, err.message)));
 };
 
-exports.approveSnippet = function(storyId, snippet){
+exports.approveSnippet = function(storyId, snippetId){
   debug('#approveSnippet');
-  
-  if (!snippet.snippetContent) return Promise.reject(createError(400, 'Snippet required'));
+
+  if (!snippetId) return Promise.reject(createError(400, 'Snippet required'));
   if (!storyId) return Promise.reject(createError(400, 'Story Id required'));
-  
-  console.log('snippet.snippetContent', snippet.snippetContent);
-  console.log('snippet', snippet);
-  
+
   return Story.findById(storyId)
   .then(story => {
-    return new Snippet(snippet).save()
+    return Snippet.findById(snippetId)
     .then(newSnippet => {
-      // if (story.snippetCount < 10) {
-      console.log('newSnippet', newSnippet);
-      console.log('story.snippets IS THIS:', story.snippets);
-      story.snippets.push(newSnippet);
+      story.snippets.push(newSnippet._id);
       story.snippetCount +=1;
       story.pendingSnippets = [];
       story.pendingSnippetCount = 0;
-      // console.log('pending count in if conditional', story.pendingSnippetCount);
+      console.log('story.snippets IS THIS:', story.snippets);
       story.save()
       .then(() => Promise.resolve(newSnippet))
       .catch(err => Promise.reject(createError(400, err.message)));
-      
     })
-    .then(newSnippet => Promise.resolve(newSnippet))
-    .catch(err => Promise.reject(createError(400, err.message)));
-  })
   .catch(err => Promise.reject(createError(404, err.message)));
+  });
+};
   // return Story.findById(storyId)
   // .then(story => {
   //   return new Snippet(snippet.snippetContent).save()
@@ -79,4 +70,3 @@ exports.approveSnippet = function(storyId, snippet){
   //   .then(approvedSnippet => Promise.resolve(approvedSnippet))
   //   .catch(err => Promise.reject(err));
   // });
-};

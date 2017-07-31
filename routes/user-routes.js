@@ -72,7 +72,8 @@ module.exports = function(router) {
 
     userController.populateEditStory(req.params.storyId)
     .then(story => {
-      editStory = story.story;
+      editStory = story;
+      console.log(story);
       res.json(editStory);
     })
     .catch(err => res.status(err.status).send(err.message));

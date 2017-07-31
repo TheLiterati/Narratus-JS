@@ -66,7 +66,7 @@ exports.populateEditStory = function(storyId){
   debug('#populateEditStory');
   return Story.findById(storyId)
   .then(() => Story.findById(storyId).populate('snippets pendingSnippets'))
-  .then(user => user)
+  .then(story => story)
   .catch(err => Promise.reject(createError(404, err.message)));
 };
 

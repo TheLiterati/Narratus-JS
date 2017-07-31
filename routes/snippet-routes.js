@@ -20,15 +20,16 @@ module.exports = function(router){
   });
 
   //approving snippets and pushing them to the array of approved snippets
-  router.post('/snippet/approve/:storyId', bearerAuth, (req, res) => {
+  router.put('/story/:storyId/snippet/:snippetId', bearerAuth, (req, res) => {
     debug('#POST /snippet/:storyId');
     req.body.userId = req.user._id;
     console.log('UserId:', req.body.userId);
     console.log('StoryId:', req.params.storyId);
-    snippetController.approveSnippet(req.params.storyId, req.body)
+    console.log('SnippetId:', req.params.snippetId);
+    snippetController.approveSnippet(req.params.storyId, req.params.snippetId)
     .then(snippet => {
       console.log(snippet);
-      res.json(snippet);
+      return res.json(snippet);
     })
     .catch(err => res.status(404).send(err.message));
   });

@@ -74,13 +74,16 @@ exports.populateEditStory = function(storyId){
 exports.addToFollowed = function(userId, storyId) {
   debug('#addToFollowed');
 
-  if(!userId) return Promise.reject(createError(400, 'Story ID required'));
+  if(!userId) return Promise.reject(createError(400, 'User ID required'));
   if(!storyId) return Promise.reject(createError(400, 'Story ID required'));
 
-  return User.findOne(userId)
+  return User.findById(userId)
   .then(user => {
-    return Story.findOne(storyId)
-    .then(() => user.followedStories.push(storyId))
-    .catch(() => Promise.reject(createError(400, 'Bad request')));
-  });
+      console.log('in push');
+      user.followedStories.push(storyId);
+      return user.save()
+  })
+    .then(user => user)
+    .catch(err => Promise.reject(createError(400, err.message)));
+  // });
 };

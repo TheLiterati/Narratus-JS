@@ -80,10 +80,12 @@ module.exports = function(router) {
   });
 
   router.put('/follow/story/:storyId', bearerAuth, (req, res) => {
-    debug('#PUT /follow/:storyId');
+    debug('#PUT /follow/story/:storyId');
 
     userController.addToFollowed(req.user._id, req.params.storyId)
-    .then(story => res.json(story))
+    .then(user => {
+      res.json(user);
+    })
     .catch(err => res.status(err.status).send(err.message));
   });
 
